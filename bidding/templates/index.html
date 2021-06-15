@@ -1,0 +1,286 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+    .blue {
+        color: #000080;
+    }
+    .upcoming {
+        color: #4f89a1;
+    }
+    .live {
+        color: #2ab55a;
+    }
+    .closed {
+        color: #962c0f;
+    }
+    .item {
+        font-size: 12pt;
+        font-weight: bold;
+    }
+    #error_modal_text {
+        background-color: #d9534f;
+        color: #ffffff;
+    }
+    #success_modal_text {
+        background-color: #5cb85c;
+        color: #000000;
+    }
+</style>
+
+<div class="mx-2">
+  <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+  </div>
+  <hr/>
+
+  <div id="accordion">
+
+    <div class="card">
+      <div class="card-header" id="header_upcoming">
+        <h5 class="mb-0">
+          <button class="btn btn-link font-weight-bold upcoming" data-toggle="collapse" data-target="#collapse_upcoming" aria-expanded="false" aria-controls="collapse_upcoming">
+            Upcoming Auctions
+          </button>
+        </h5>
+      </div>
+      <div id="collapse_upcoming" class="collapse" aria-labelledby="header_upcoming" data-parent="#accordion">
+        <div class="card-body">
+          {% if items_upcoming %}
+            {% for item in items_upcoming %}
+              <span id="promise_{{ item.id }}" data-status="upcoming">
+                <div class="row">
+                  <div class="col-12 item mb-2 upcoming">
+                    {{ item.promiser }} - {{ item.name }}
+                  </div>
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
+                    Winning bid:
+                    <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
+                    <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                  </div>
+                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
+                    Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
+                  </div>
+                  <div id="time_{{ item.id }}" class="col-12">
+                    Opening at {{ item.dt_live|date:'d-m-Y H:i' }}
+                  </div>
+                </div>
+                <hr/>
+              </span>
+            {% endfor %}
+          {% else %}
+            There are no upcoming auctions.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" id="header_live">
+        <h5 class="mb-0">
+          <button class="btn btn-link font-weight-bold  live" data-toggle="collapse" data-target="#collapse_live" aria-expanded="true" aria-controls="collapse_upcoming">
+            Live Auctions
+          </button>
+        </h5>
+      </div>
+      <div id="collapse_live" class="collapse show" aria-labelledby="header_live" data-parent="#accordion">
+        <div class="card-body">
+          {% if items_live %}
+            {% for item in items_live %}
+              <span id="promise_{{ item.id }}" data-status="live">
+                <div class="row">
+                  <div class="col-12 item mb-2 live">
+                    {{ item.promiser }} - {{ item.name }}
+                  </div>
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12">
+                    Winning bid:
+                    <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
+                    <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                  </div>
+                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
+                    Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
+                  </div>
+                  <div id="time_{{ item.id }}" class="col-12">
+                    Closing at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                  </div>
+                </div>
+                <hr/>
+              </span>
+            {% endfor %}
+          {% else %}
+            There are no live auctions.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" id="header_closed">
+        <h5 class="mb-0">
+          <button class="btn btn-link font-weight-bold closed" data-toggle="collapse" data-target="#collapse_closed" aria-expanded="false" aria-controls="collapse_upcoming">
+            Closed Auctions
+          </button>
+        </h5>
+      </div>
+      <div id="collapse_closed" class="collapse" aria-labelledby="header_closed" data-parent="#accordion">
+        <div class="card-body">
+          {% if items_closed %}
+            {% for item in items_closed %}
+              <span id="promise_{{ item.id }}" data-status="closed">
+                <div class="row">
+                  <div class="col-12 item mb-2 closed">
+                    {{ item.promiser }} - {{ item.name }}
+                  </div>
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12">
+                    Winning bid:
+                    <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
+                    <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                  </div>
+                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
+                    Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
+                  </div>
+                  <div id="time_{{ item.id }}" class="col-12">
+                    Closed at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                  </div>
+                </div>
+                <hr/>
+              </span>
+            {% endfor %}
+          {% else %}
+            There are no closed auctions.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/>
+
+  <div class="modal fade" id="error_modal" tabindex="-1" role="dialog" aria-labelledby="error_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body" id="error_modal_text">
+
+        </div>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="success_modal" tabindex="-1" role="dialog" aria-labelledby="success_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body" id="success_modal_text">
+
+        </div>
+        <button type="button" class="btn btn-success" data-dismiss="modal">Yay!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+  url = new URL(window.location.href);
+  $("#name").val(url.searchParams.get("name"))
+
+  updateBids();
+
+  function updateBids(){
+    $.ajax({
+      url: '/bidding/update_bids/',
+      contentType: "application/json",
+      success: function (data) {
+        for (const [id, item_updates] of Object.entries(data["item_updates"])) {
+          let status = item_updates["status"]
+          if (status == "live") {
+            let price = item_updates["winning_price"]
+            let name = item_updates["winning_name"]
+            if (price && name) {
+              let winning_bid_div = $("#winning_bid_" + id)
+              winning_bid_div.find(".winning_price").html("£" + price)
+              winning_bid_div.find(".winning_name").html("(" + name + ")")
+            }
+            let item_span = $("#promise_" + id)
+            let old_status = item_span.attr("data-status")
+            if (old_status == "upcoming") {
+              item_span.attr("data-status", "live")
+              item_span.find(".upcoming").removeClass('upcoming').addClass('live')
+              $("#winning_bid_" + id).removeClass("d-none")
+              $("#your_bid_" + id).removeClass("d-none")
+              let dt_closed = item_updates["dt_closed"]
+              $("#time_" + id).html("Closing at " + dt_closed)
+              $("#collapse_live").find(".card-body").prepend(item_span.prop('outerHTML'))
+              item_span.remove()
+            }
+          }
+          else if (status == "closed") {
+            let item_span = $("#promise_" + id)
+            let old_status = item_span.attr("data-status")
+            if (old_status == "live") {
+              item_span.attr("data-status", "closed")
+              item_span.find(".live").removeClass('live').addClass('closed')
+              $("#your_bid_" + id).addClass("d-none")
+              let time_div = $("#time_" + id)
+              let time_text = time_div.html()
+              time_text = time_text.replace("Closing at", "Closed at")
+              $("#time_" + id).html(time_text)
+              $("#collapse_closed").find(".card-body").prepend(item_span.prop('outerHTML'))
+              item_span.remove()
+            }
+          }
+        }
+      }
+    });
+    setTimeout(updateBids, 5000);
+  }
+
+  $('.bid-price').keyup(function(e){
+    if(e.keyCode == 13)
+    {
+      $(this).parent().find(".btn-bid").click()
+    }
+  });
+
+  $(".btn-bid").click(function() {
+      let promise_id = $(this).attr("data-promise-id")
+      let price = $(this).parent().find(".bid-price").val()
+      let name = $("#name").val()
+      if (!name) {
+        add_error("You must enter a name to bid (at the top of the page).")
+      }
+      else if (!price) {
+        add_error("You must enter a price to bid on this item.")
+      }
+      else {
+        $.ajax({
+          url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/',
+          contentType: "application/json",
+          success: function (data) {
+            let error = data["error"]
+            if (error) {
+              add_error(error)
+            }
+            else {
+              add_success("You have successfully bid £" + price + " on this promise!")
+              updateBids()
+            }
+          }
+        });
+      }
+  })
+
+  function add_error(error_text) {
+    $("#error_modal_text").html(error_text)
+    $('#error_modal').modal()
+  }
+
+  function add_success(success_text) {
+    $("#success_modal_text").html(success_text)
+    $('#success_modal').modal()
+  }
+</script>

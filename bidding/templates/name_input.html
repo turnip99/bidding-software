@@ -1,0 +1,18 @@
+<style>
+    .blue {
+        color: #000080;
+    }
+</style>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<div class="mx-2">
+  <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+    </div>
+    <input class="btn btn-primary" type="submit" value="OK">
+  </form>
+</div>
