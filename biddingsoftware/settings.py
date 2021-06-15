@@ -26,8 +26,10 @@ SECRET_KEY = '#t5d*cr2jgf1x(n7w-_805(4j*0*xul-#^vol^+zx*+=!9d(ed'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'lboropromiseauction.com'
-    'www.lboropromiseauction.com'
+    'lboropromiseauction.com',
+    'www.lboropromiseauction.com',
+    '127.0.0.1',
+    '178.62.119.124',
 ]
 
 
