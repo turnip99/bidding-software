@@ -13,7 +13,7 @@ def name_input(request):
     return HttpResponseRedirect("/bidding/?name=" + request.POST["name"])
 
 
-def index(request):
+def bidding(request):
   items = Item.objects.all().order_by("-dt_closed")
   items_upcoming = []
   items_live = []
@@ -31,7 +31,7 @@ def index(request):
     'items_live': items_live,
     'items_closed': items_closed,
   }
-  return render(request, 'index.html', context)
+  return render(request, 'bidding.html', context)
 
 
 def update_bids(request):
