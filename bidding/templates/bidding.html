@@ -26,6 +26,9 @@
         background-color: #5cb85c;
         color: #000000;
     }
+    .bid-price {
+        width: 100px;
+    }
 </style>
 
 <div class="mx-2">
@@ -72,6 +75,7 @@
                       </span>
                     {% endwith %}
                   </div>
+
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
