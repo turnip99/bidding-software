@@ -54,21 +54,24 @@
                   <div class="col-12 item mb-2 upcoming">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12">
+                    Starting price: {{ item.formatted_base_price }}
+                  </div>
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue d-none">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
                     {% with item.additional_winners as additional_winners %}
-                      {% if additional_winners %}
-                        (Runner-up winners:
-                        <span class="additional_winners">
+                      <span class="additional_winners">
+                        {% if additional_winners %}
+                          (Runner-up winners:
                           {% for additional_winner in additional_winners %}
                             {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
-                        </span>
-                      {% endif %}
+                        {% endif %}
+                      </span>
                     {% endwith %}
                   </div>
-                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
+                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 blue d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
                   <div id="time_{{ item.id }}" class="col-12">
@@ -102,18 +105,21 @@
                   <div class="col-12 item mb-2 live">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue">
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 {% if item.winning_price %} d-none{% endif %}">
+                    Starting price: {{ item.formatted_base_price }}
+                  </div>
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue {% if not item.winning_price %} d-none{% endif %}">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
                     {% with item.additional_winners as additional_winners %}
-                      {% if additional_winners %}
-                        (Runner-up winners:
-                        <span class="additional_winners">
+                      <span class="additional_winners">
+                        {% if additional_winners %}
+                          (Runner-up winners:
                           {% for additional_winner in additional_winners %}
                             {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
-                        </span>
-                      {% endif %}
+                        {% endif %}
+                      </span>
                     {% endwith %}
                   </div>
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
@@ -151,18 +157,21 @@
                   <div class="col-12 item mb-2 closed">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 d-none">
+                    Starting price: {{ item.formatted_base_price }}
+                  </div>
                   <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
                     {% with item.additional_winners as additional_winners %}
-                      {% if additional_winners %}
-                        (Runner-up winners:
-                        <span class="additional_winners">
+                      <span class="additional_winners">
+                        {% if additional_winners %}
+                          (Runner-up winners:
                           {% for additional_winner in additional_winners %}
                             {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
-                        </span>
-                      {% endif %}
+                        {% endif %}
+                      </span>
                     {% endwith %}
                   </div>
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
@@ -229,12 +238,14 @@
             let price = item_updates["winning_price"]
             let name = item_updates["winning_name"]
             if (price && name) {
+              $("#starting_price_" + id).addClass("d-none")
               let winning_bid_div = $("#winning_bid_" + id)
               winning_bid_div.find(".winning_price").html("£" + price)
               winning_bid_div.find(".winning_name").html("(" + name + ")")
-              if (item_updates["additional_winners"]) {
+              winning_bid_div.removeClass("d-none")
+              if (item_updates["additional_winners"].length > 0) {
                 let additional_winners = item_updates["additional_winners"]
-                let additional_winners_text = ""
+                let additional_winners_text = "(Runner-up winners: "
                 for (let i = 0; i < additional_winners.length; i++) {
                   additional_winners_text += additional_winners[i]
                   if (i < additional_winners.length-1) {
@@ -250,7 +261,6 @@
             if (old_status == "upcoming") {
               item_span.attr("data-status", "live")
               item_span.find(".upcoming").removeClass('upcoming').addClass('live')
-              $("#winning_bid_" + id).removeClass("d-none")
               $("#your_bid_" + id).removeClass("d-none")
               let dt_closed = item_updates["dt_closed"]
               $("#time_" + id).html("Closing at " + dt_closed)
@@ -262,6 +272,8 @@
             let item_span = $("#promise_" + id)
             let old_status = item_span.attr("data-status")
             if (old_status == "live") {
+              $("#starting_price_" + id).addClass("d-none")
+              $("#winning_bid_" + id).removeClass("d-none")
               item_span.attr("data-status", "closed")
               item_span.find(".live").removeClass('live').addClass('closed')
               $("#your_bid_" + id).addClass("d-none")

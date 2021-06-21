@@ -43,6 +43,10 @@ class Item(models.Model):
         else:
             return None
 
+    @property
+    def formatted_base_price(self):
+        return '{:0,.2f}'.format(self.base_price)
+
     def bids(self):
         return Bid.objects.filter(item=self).order_by("-price")
 
@@ -54,6 +58,7 @@ class Item(models.Model):
                     additional_winners.append(bid.name)
                 if len(additional_winners) == self.winners_num-1:
                     break
+            print(self.name + " - " + str(additional_winners))
         return additional_winners
 
 

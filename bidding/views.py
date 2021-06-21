@@ -60,6 +60,8 @@ def add_bid(request, item_id, price, name):
       error = "This item is no longer live. Sorry about that. :("
   if item.winning_price and price <= item.winning_price:
     error = "You bid must be higher than the current winning bid (£" + item.formatted_winning_price + ")."
+  elif price < item.base_price:
+    error = "You bid must be higher than base price (£" + item.formatted_base_price + ")."
   else:
     Bid.objects.create(item=item, name=name, price=price)
     item.winning_price = price
