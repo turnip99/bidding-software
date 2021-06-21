@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <style>
@@ -40,7 +41,7 @@
     <div class="card">
       <div class="card-header" id="header_upcoming">
         <h5 class="mb-0">
-          <button class="btn btn-link font-weight-bold upcoming" data-toggle="collapse" data-target="#collapse_upcoming" aria-expanded="false" aria-controls="collapse_upcoming">
+          <button class="btn btn-link font-weight-bold upcoming w-100 text-left" data-toggle="collapse" data-target="#collapse_upcoming" aria-expanded="false" aria-controls="collapse_upcoming">
             Upcoming Auctions
           </button>
         </h5>
@@ -54,10 +55,10 @@
                   <div class="col-12 item mb-2 upcoming">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12">
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1">
                     Starting price: £{{ item.formatted_base_price }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue d-none">
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue d-none">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -74,11 +75,11 @@
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 pt-1">
                     <span id="time_{{ item.id }}">
                       Opening at {{ item.dt_live|date:'d-m-Y H:i' }}
                     </span>
-                    <span id="remaining_{{ item.id }}">
+                    <span id="remaining_{{ item.id }}" class="font-weight-bold">
 
                     </span>
                   </div>
@@ -96,7 +97,7 @@
     <div class="card">
       <div class="card-header" id="header_live">
         <h5 class="mb-0">
-          <button class="btn btn-link font-weight-bold live" data-toggle="collapse" data-target="#collapse_live" aria-expanded="true" aria-controls="collapse_upcoming">
+          <button class="btn btn-link font-weight-bold live w-100 text-left" data-toggle="collapse" data-target="#collapse_live" aria-expanded="true" aria-controls="collapse_upcoming">
             Live Auctions
           </button>
         </h5>
@@ -110,10 +111,10 @@
                   <div class="col-12 item mb-2 live">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 {% if item.winning_price %} d-none{% endif %}">
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1 {% if item.winning_price %} d-none{% endif %}">
                     Starting price: £{{ item.formatted_base_price }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue {% if not item.winning_price %} d-none{% endif %}">
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue {% if not item.winning_price %} d-none{% endif %}">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -130,12 +131,12 @@
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 pt-1">
                     <span id="time_{{ item.id }}">
                       Closing at {{ item.dt_closed|date:'d-m-Y H:i' }}
                     </span>
-                    <span id="remaining_{{ item.id }}">
-
+                    <span id="remaining_{{ item.id }}" class="font-weight-bold">
+                      ({{ item.time_until_close }} remaining)
                     </span>
                   </div>
                 </div>
@@ -153,7 +154,7 @@
 
       <div class="card-header" id="header_closed">
         <div class="btn-group w-100" role="group">
-          <button class="btn btn-link font-weight-bold text-left closed" data-toggle="collapse" data-target="#collapse_closed" aria-expanded="false" aria-controls="collapse_upcoming">
+          <button class="btn btn-link font-weight-bold text-left closed w-100 text-left" data-toggle="collapse" data-target="#collapse_closed" aria-expanded="false" aria-controls="collapse_upcoming">
             Closed Auctions
           </button>
         </div>
@@ -167,10 +168,10 @@
                   <div class="col-12 item mb-2 closed">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 d-none">
+                  <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1 d-none">
                     Starting price: £{{ item.formatted_base_price }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue">
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -187,11 +188,11 @@
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 pt-1">
                     <span id="time_{{ item.id }}">
                       Closed at {{ item.dt_closed|date:'d-m-Y H:i' }}
                     </span>
-                    <span id="remaining_{{ item.id }}">
+                    <span id="remaining_{{ item.id }}" class="font-weight-bold">
 
                     </span>
                   </div>
