@@ -31,7 +31,7 @@
   <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+    <input type="text" class="form-control" id="name" name="name" placeholder="Please use your first name and surname." required>
   </div>
   <hr/>
 
@@ -58,6 +58,15 @@
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                    {% with item.additional_winners as additional_winners %}
+                      {% if additional_winners %}
+                        (Runner-up winners:
+                        <span class="additional_winners">
+                          {% for additional_winner in additional_winners %}
+                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                        </span>
+                      {% endif %}
+                    {% endwith %}
                   </div>
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
@@ -79,7 +88,7 @@
     <div class="card">
       <div class="card-header" id="header_live">
         <h5 class="mb-0">
-          <button class="btn btn-link font-weight-bold  live" data-toggle="collapse" data-target="#collapse_live" aria-expanded="true" aria-controls="collapse_upcoming">
+          <button class="btn btn-link font-weight-bold live" data-toggle="collapse" data-target="#collapse_live" aria-expanded="true" aria-controls="collapse_upcoming">
             Live Auctions
           </button>
         </h5>
@@ -93,10 +102,19 @@
                   <div class="col-12 item mb-2 live">
                     {{ item.promiser }} - {{ item.name }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12">
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                    {% with item.additional_winners as additional_winners %}
+                      {% if additional_winners %}
+                        (Runner-up winners:
+                        <span class="additional_winners">
+                          {% for additional_winner in additional_winners %}
+                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                        </span>
+                      {% endif %}
+                    {% endwith %}
                   </div>
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
@@ -116,12 +134,13 @@
     </div>
 
     <div class="card">
+
       <div class="card-header" id="header_closed">
-        <h5 class="mb-0">
-          <button class="btn btn-link font-weight-bold closed" data-toggle="collapse" data-target="#collapse_closed" aria-expanded="false" aria-controls="collapse_upcoming">
+        <div class="btn-group w-100" role="group">
+          <button class="btn btn-link font-weight-bold text-left closed" data-toggle="collapse" data-target="#collapse_closed" aria-expanded="false" aria-controls="collapse_upcoming">
             Closed Auctions
           </button>
-        </h5>
+        </div>
       </div>
       <div id="collapse_closed" class="collapse" aria-labelledby="header_closed" data-parent="#accordion">
         <div class="card-body">
@@ -136,6 +155,15 @@
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
+                    {% with item.additional_winners as additional_winners %}
+                      {% if additional_winners %}
+                        (Runner-up winners:
+                        <span class="additional_winners">
+                          {% for additional_winner in additional_winners %}
+                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                        </span>
+                      {% endif %}
+                    {% endwith %}
                   </div>
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
@@ -204,6 +232,18 @@
               let winning_bid_div = $("#winning_bid_" + id)
               winning_bid_div.find(".winning_price").html("£" + price)
               winning_bid_div.find(".winning_name").html("(" + name + ")")
+              if (item_updates["additional_winners"]) {
+                let additional_winners = item_updates["additional_winners"]
+                let additional_winners_text = ""
+                for (let i = 0; i < additional_winners.length; i++) {
+                  additional_winners_text += additional_winners[i]
+                  if (i < additional_winners.length-1) {
+                      additional_winners_text += ", "
+                  }
+                }
+                additional_winners_text += ")"
+                winning_bid_div.find(".additional_winners").html(additional_winners_text)
+              }
             }
             let item_span = $("#promise_" + id)
             let old_status = item_span.attr("data-status")

@@ -10,6 +10,7 @@ class Item(models.Model):
     base_price = models.FloatField(max_length=0)
     winning_name = models.CharField(max_length=50, blank=True, null=True)
     winning_price = models.FloatField(max_length=0, blank=True, null=True)
+    winners_num = models.IntegerField(default=1)
 
     def __str__(self):
         string = self.name
@@ -41,6 +42,19 @@ class Item(models.Model):
             return '{:0,.2f}'.format(self.winning_price)
         else:
             return None
+
+    def bids(self):
+        return Bid.objects.filter(item=self).order_by("-price")
+
+    def additional_winners(self):
+        additional_winners = []
+        if self.winning_price and self.winners_num > 1:
+            for bid in self.bids():
+                if bid.name not in additional_winners and bid.name != bid.item.winning_name:
+                    additional_winners.append(bid.name)
+                if len(additional_winners) == self.winners_num-1:
+                    break
+        return additional_winners
 
 
 class Bid(models.Model):

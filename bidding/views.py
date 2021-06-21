@@ -19,6 +19,7 @@ def bidding(request):
   items_live = []
   items_closed = []
   for item in items:
+    item.additional_winners = item.additional_winners()
     if item.live:
       items_live.append(item)
     elif item.closed:
@@ -39,7 +40,7 @@ def update_bids(request):
   item_updates = {}
   for item in items:
     if item.status != "upcoming":
-      item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name}
+      item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name, "additional_winners": item.additional_winners()}
       if item.status == "live":
         item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
   return JsonResponse({'item_updates': item_updates})
