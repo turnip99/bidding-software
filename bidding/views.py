@@ -43,6 +43,7 @@ def update_bids(request):
       item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name, "additional_winners": item.additional_winners()}
       if item.status == "live":
         item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
+        item_updates[item.id]["remaining"] = item.time_until_close()
   return JsonResponse({'item_updates': item_updates})
 
 

@@ -55,7 +55,7 @@
                     {{ item.promiser }} - {{ item.name }}
                   </div>
                   <div id="starting_price_{{ item.id }}" class="col-md-6 col-12">
-                    Starting price: {{ item.formatted_base_price }}
+                    Starting price: £{{ item.formatted_base_price }}
                   </div>
                   <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue d-none">
                     Winning bid:
@@ -71,11 +71,16 @@
                       </span>
                     {% endwith %}
                   </div>
-                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 blue d-none">
+                  <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div id="time_{{ item.id }}" class="col-12">
-                    Opening at {{ item.dt_live|date:'d-m-Y H:i' }}
+                  <div class="col-12">
+                    <span id="time_{{ item.id }}">
+                      Opening at {{ item.dt_live|date:'d-m-Y H:i' }}
+                    </span>
+                    <span id="remaining_{{ item.id }}">
+
+                    </span>
                   </div>
                 </div>
                 <hr/>
@@ -106,7 +111,7 @@
                     {{ item.promiser }} - {{ item.name }}
                   </div>
                   <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 {% if item.winning_price %} d-none{% endif %}">
-                    Starting price: {{ item.formatted_base_price }}
+                    Starting price: £{{ item.formatted_base_price }}
                   </div>
                   <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue {% if not item.winning_price %} d-none{% endif %}">
                     Winning bid:
@@ -125,8 +130,13 @@
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div id="time_{{ item.id }}" class="col-12">
-                    Closing at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                  <div class="col-12">
+                    <span id="time_{{ item.id }}">
+                      Closing at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                    </span>
+                    <span id="remaining_{{ item.id }}">
+
+                    </span>
                   </div>
                 </div>
                 <hr/>
@@ -158,9 +168,9 @@
                     {{ item.promiser }} - {{ item.name }}
                   </div>
                   <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 d-none">
-                    Starting price: {{ item.formatted_base_price }}
+                    Starting price: £{{ item.formatted_base_price }}
                   </div>
-                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12">
+                  <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 blue">
                     Winning bid:
                     <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                     <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -177,8 +187,13 @@
                   <div id="your_bid_{{ item.id }}" class="col-md-6 col-12 d-none">
                     Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                   </div>
-                  <div id="time_{{ item.id }}" class="col-12">
-                    Closed at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                  <div class="col-12">
+                    <span id="time_{{ item.id }}">
+                      Closed at {{ item.dt_closed|date:'d-m-Y H:i' }}
+                    </span>
+                    <span id="remaining_{{ item.id }}">
+
+                    </span>
                   </div>
                 </div>
                 <hr/>
@@ -263,9 +278,16 @@
               item_span.find(".upcoming").removeClass('upcoming').addClass('live')
               $("#your_bid_" + id).removeClass("d-none")
               let dt_closed = item_updates["dt_closed"]
-              $("#time_" + id).html("Closing at " + dt_closed)
+              let time_div = $("#time_" + id)
+              time_div.html("Closing at " + dt_closed)
               $("#collapse_live").find(".card-body").prepend(item_span.prop('outerHTML'))
               item_span.remove()
+            }
+            let remaining = item_updates["remaining"]
+            if (remaining) {
+                let remaining_div = $("#remaining_" + id)
+                let remaining_text = " (" + item_updates["remaining"] + " remaining)"
+                remaining_div.html(remaining_text)
             }
           }
           else if (status == "closed") {
@@ -280,7 +302,8 @@
               let time_div = $("#time_" + id)
               let time_text = time_div.html()
               time_text = time_text.replace("Closing at", "Closed at")
-              $("#time_" + id).html(time_text)
+              time_div.html(time_text)
+              $("#remaining_" + id).html("")
               $("#collapse_closed").find(".card-body").prepend(item_span.prop('outerHTML'))
               item_span.remove()
             }

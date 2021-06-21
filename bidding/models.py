@@ -58,8 +58,33 @@ class Item(models.Model):
                     additional_winners.append(bid.name)
                 if len(additional_winners) == self.winners_num-1:
                     break
-            print(self.name + " - " + str(additional_winners))
         return additional_winners
+
+    def time_until_close(self):
+        diff = self.dt_closed - timezone.now()
+        s = diff.seconds
+        days = diff.days-1
+        hours, remainder = divmod(s, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        if days > 1:
+            string = str(days) + " days"
+        elif days == 1:
+            string = str(days) + " day"
+        elif hours > 1:
+            string = str(hours) + " hours"
+        elif hours == 1:
+            string = str(hours) + " hour"
+        elif minutes > 1:
+            string = str(minutes) + " minutes"
+        elif minutes == 1:
+            string = str(minutes) + " minute"
+        elif seconds > 1:
+            string = str(seconds) + " seconds"
+        elif seconds == 1:
+            string = str(seconds) + " second"
+        else:
+            string = ""
+        return string
 
 
 class Bid(models.Model):
