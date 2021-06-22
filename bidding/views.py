@@ -61,10 +61,10 @@ def add_bid(request, item_id, price, name, phone_number):
       error = "This item is no longer live. Sorry about that. :("
   elif item.winning_price:
     if item.winners_num == 1:
-      if item.winning_name == name and item.winning_phone_number == phone_number:
-        error = "You're already winning this item - no need to outbid yourself!"
-      elif price <= item.winning_price:
+      if price <= item.winning_price:
         error = "Your bid must be higher than the current winning bid (£" + item.formatted_winning_price + ")."
+      elif item.winning_name == name and item.winning_phone_number == phone_number:
+        error = "You're already winning this item - no need to outbid yourself!"
     elif item.winners_num > 1:
       lowest_winning_price = item.lowest_winning_price()
       highest_user_price = item.highest_user_price(name, phone_number)
