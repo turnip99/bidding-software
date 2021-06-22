@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="m-2">
+    Name:<input type="text" class="form-control" id="txtName" onchange="fun()"/><br/>
+    Promises:<input type="text" class="form-control" id="txtPromises" onchange="fun()"/><br/>
+    Total:<input type="text" class="form-control" id="txtTotal" onchange="fun()"/><br/><br/>
+    Result:<textarea class="form-control" id="txtResult" rows="8" cols="80"></textarea>
+  </div>
+
+  <script type="text/javascript">
+    function fun()
+    {
+      txtResult.innerHTML = "Hi " + txtName.value + "! The promise auction results are out - you've won " + txtPromises.value + "! 😊\nPlease could you transfer the total of £" + txtTotal.value + " to the CU account at: \nAccount number: 29689384 \nSort code: 60-14-10 \nReference: 94018\n\nAny questions please don't hesitate to ask and thanks so much for getting involved in the promise auction! Cheers! 😁";
+    }
+  </script>
+{% endblock %}
