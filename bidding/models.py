@@ -9,6 +9,7 @@ class Item(models.Model):
     dt_closed = models.DateTimeField('date/time down')
     base_price = models.FloatField(max_length=0)
     winning_name = models.CharField(max_length=50, blank=True, null=True)
+    winning_phone_number = models.CharField(max_length=20, blank=True, null=True)
     winning_price = models.FloatField(max_length=0, blank=True, null=True)
     winners_num = models.IntegerField(default=1)
 

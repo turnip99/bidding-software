@@ -338,6 +338,9 @@
       else if (!price) {
         add_error("You must enter a price to bid on this item.")
       }
+      else if (price > 999) {
+        add_error("Please enter a reasonable price - we're not convinced you're that rich!")
+      }
       else {
         $.ajax({
           url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/' + phone_number + '/',

@@ -59,7 +59,9 @@ def add_bid(request, item_id, price, name, phone_number):
       error = "This item has not yet gone live. How did you even get here? :/"
     else:
       error = "This item is no longer live. Sorry about that. :("
-  if item.winning_price and price <= item.winning_price:
+  elif item.winning_name == name and item.winning_phone_number == phone_number:
+    error = "You're already winning this item - no need to outbid yourself!"
+  elif item.winning_price and price <= item.winning_price:
     error = "You bid must be higher than the current winning bid (£" + item.formatted_winning_price + ")."
   elif price < item.base_price:
     error = "You bid must be higher than base price (£" + item.formatted_base_price + ")."
@@ -67,5 +69,6 @@ def add_bid(request, item_id, price, name, phone_number):
     Bid.objects.create(item=item, name=name, price=price, phone_number=phone_number)
     item.winning_price = price
     item.winning_name = name
+    item.winning_phone_number = phone_number
     item.save()
   return JsonResponse({'error': error})
