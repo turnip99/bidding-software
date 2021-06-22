@@ -331,7 +331,7 @@
       else if (!price) {
         add_error("You must - a price to bid on this item.")
       }
-      else if (price > 999) {
+      else if (price > 999.99) {
         add_error("Please enter a reasonable price - we're not convinced you're that rich!")
       }
       else {
@@ -350,7 +350,7 @@
           callback: function (result) {
             if (result == true) {
               $.ajax({
-                url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/' + phone_number + '/',
+                url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + encodeURIComponent(name) + '/' + encodeURIComponent(phone_number) + '/',
                 contentType: "application/json",
                 success: function (data) {
                   let error = data["error"]
