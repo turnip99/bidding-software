@@ -4,13 +4,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 
 from .models import Item, Bid
+from urllib.parse import quote
 
 
 def name_input(request):
   if request.method == 'GET':
     return render(request, 'name_input.html', {})
   else:
-    return HttpResponseRedirect("/bidding/?name=" + request.POST["name"] + "&phone_number=" + request.POST["phone_number"])
+    return HttpResponseRedirect("/bidding/?name=" + quote(request.POST["name"]) + "&phone_number=" + quote(request.POST["phone_number"]))
 
 
 def bidding(request):
