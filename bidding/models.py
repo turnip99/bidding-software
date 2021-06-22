@@ -53,13 +53,26 @@ class Item(models.Model):
 
     def additional_winners(self):
         additional_winners = []
+        winning_names_numbers = []
         if self.winning_price and self.winners_num > 1:
             for bid in self.bids():
-                if bid.name not in additional_winners and bid.name != bid.item.winning_name:
-                    additional_winners.append(bid.name)
+                if not in_winning_names_numbers(winning_names_numbers, bid) and bid.name != bid.item.winning_name and bid.phone_number != bid.item.winning_phone_number:
+                    additional_winners.append({"position": number_to_position(len(additional_winners)+2), "name": bid.name, "price": bid.formatted_price})
+                    winning_names_numbers.append({"name": bid.name, "phone_number": bid.phone_number})
                 if len(additional_winners) == self.winners_num-1:
                     break
         return additional_winners
+
+    def lowest_winning_price(self):
+        additional_winners = self.additional_winners()
+        return float(additional_winners[-1]["price"])
+
+    def highest_user_price(self, name, phone_number):
+        highest_user_bid = Bid.objects.filter(name=name, phone_number=phone_number).order_by("-price").first()
+        if highest_user_bid:
+            return float(highest_user_bid.price)
+        else:
+            return 0
 
     def time_until_close(self):
         diff = self.dt_closed - timezone.now()
@@ -97,3 +110,25 @@ class Bid(models.Model):
 
     def __str__(self):
         return str(self.item.name) + " - " + self.name + " - £" + str(self.price)
+
+    @property
+    def formatted_price(self):
+        return '{:0,.2f}'.format(self.price)
+
+
+def number_to_position(num):
+  if num == 1:
+    return "1st"
+  elif num == 2:
+    return "2nd"
+  elif num == 3:
+    return "3rd"
+  else:
+    return str(num) + "th"
+
+
+def in_winning_names_numbers(winning_names_numbers, bid):
+    for winning_name_number in winning_names_numbers:
+        if winning_name_number["name"] == bid.name and winning_name_number["phone_number"] == bid.phone_number:
+            return True
+    return False

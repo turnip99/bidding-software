@@ -18,14 +18,6 @@
         font-size: 12pt;
         font-weight: bold;
     }
-    #error_modal_text {
-        background-color: #d9534f;
-        color: #ffffff;
-    }
-    #success_modal_text {
-        background-color: #5cb85c;
-        color: #000000;
-    }
     .bid-price {
         width: 100px;
     }
@@ -65,9 +57,10 @@
                     {% with item.additional_winners as additional_winners %}
                       <span class="additional_winners">
                         {% if additional_winners %}
-                          (Runner-up winners:
+                          <br/>
                           {% for additional_winner in additional_winners %}
-                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {{ additional_winner.position }}: £{{ additional_winner.price }} ({{ additional_winner.name }})<br/>
+                          {% endfor %}
                         {% endif %}
                       </span>
                     {% endwith %}
@@ -122,9 +115,10 @@
                     {% with item.additional_winners as additional_winners %}
                       <span class="additional_winners">
                         {% if additional_winners %}
-                          (Runner-up winners:
+                          <br/>
                           {% for additional_winner in additional_winners %}
-                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {{ additional_winner.position }}: £{{ additional_winner.price }} ({{ additional_winner.name }})<br/>
+                          {% endfor %}
                         {% endif %}
                       </span>
                     {% endwith %}
@@ -179,9 +173,10 @@
                     {% with item.additional_winners as additional_winners %}
                       <span class="additional_winners">
                         {% if additional_winners %}
-                          (Runner-up winners:
+                          <br/>
                           {% for additional_winner in additional_winners %}
-                            {{ additional_winner }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {{ additional_winner.position }}: £{{ additional_winner.price }} ({{ additional_winner.name }})<br/>
+                          {% endfor %}
                         {% endif %}
                       </span>
                     {% endwith %}
@@ -264,14 +259,11 @@
               winning_bid_div.removeClass("d-none")
               if (item_updates["additional_winners"].length > 0) {
                 let additional_winners = item_updates["additional_winners"]
-                let additional_winners_text = "(Runner-up winners: "
+                console.log(additional_winners)
+                let additional_winners_text = "<br/>"
                 for (let i = 0; i < additional_winners.length; i++) {
-                  additional_winners_text += additional_winners[i]
-                  if (i < additional_winners.length-1) {
-                      additional_winners_text += ", "
-                  }
+                  additional_winners_text += additional_winners[i]["position"] + ": £" + additional_winners[i]["price"] + " (" + additional_winners[i]["name"] + ")<br/>"
                 }
-                additional_winners_text += ")"
                 winning_bid_div.find(".additional_winners").html(additional_winners_text)
               }
             }
@@ -337,26 +329,45 @@
         add_error("You must enter a phone number to bid (at the top of the page).")
       }
       else if (!price) {
-        add_error("You must enter a price to bid on this item.")
+        add_error("You must - a price to bid on this item.")
       }
       else if (price > 999) {
         add_error("Please enter a reasonable price - we're not convinced you're that rich!")
       }
       else {
-        $.ajax({
-          url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/' + phone_number + '/',
-          contentType: "application/json",
-          success: function (data) {
-            let error = data["error"]
-            if (error) {
-              add_error(error)
+        bootbox.confirm({
+          message: "Are you sure that you wish to bid £" + price + " on this promise?",
+          buttons: {
+            confirm: {
+              label: 'Yes',
+              className: 'btn-success'
+            },
+            cancel: {
+              label: 'No',
+              className: 'btn-danger'
             }
-            else {
-              add_success("You have successfully bid £" + price + " on this promise!")
-              updateBids()
+          },
+          callback: function (result) {
+            if (result == true) {
+              $.ajax({
+                url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/' + phone_number + '/',
+                contentType: "application/json",
+                success: function (data) {
+                  let error = data["error"]
+                  if (error) {
+                    add_error(error)
+                  }
+                  else {
+                    add_success("You have successfully bid £" + price + " on this promise!")
+                    updateBids()
+                  }
+                }
+              });
             }
+
           }
         });
+
       }
   })
 
