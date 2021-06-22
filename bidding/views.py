@@ -10,7 +10,7 @@ def name_input(request):
   if request.method == 'GET':
     return render(request, 'name_input.html', {})
   else:
-    return HttpResponseRedirect("/bidding/?name=" + request.POST["name"])
+    return HttpResponseRedirect("/bidding/?name=" + request.POST["name"] + "&phone_number=" + request.POST["phone_number"])
 
 
 def bidding(request):
@@ -47,7 +47,7 @@ def update_bids(request):
   return JsonResponse({'item_updates': item_updates})
 
 
-def add_bid(request, item_id, price, name):
+def add_bid(request, item_id, price, name, phone_number):
   item = get_object_or_404(Item, id=item_id)
   error = ""
   try:
@@ -64,7 +64,7 @@ def add_bid(request, item_id, price, name):
   elif price < item.base_price:
     error = "You bid must be higher than base price (£" + item.formatted_base_price + ")."
   else:
-    Bid.objects.create(item=item, name=name, price=price)
+    Bid.objects.create(item=item, name=name, price=price, phone_number=phone_number)
     item.winning_price = price
     item.winning_name = name
     item.save()

@@ -91,6 +91,7 @@ class Bid(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     dt_bid = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=20)
     price = models.FloatField(max_length=0)
 
     def __str__(self):

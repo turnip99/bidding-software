@@ -33,10 +33,7 @@
 
 <div class="mx-2">
   <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="Please use your first name and surname." required>
-  </div>
+  {% include "user_details.html" %}
   <hr/>
 
   <div id="accordion">
@@ -244,6 +241,7 @@
 <script>
   url = new URL(window.location.href);
   $("#name").val(url.searchParams.get("name"))
+  $("#phone_number").val(url.searchParams.get("phone_number"))
 
   updateBids();
 
@@ -330,15 +328,19 @@
       let promise_id = $(this).attr("data-promise-id")
       let price = $(this).parent().find(".bid-price").val()
       let name = $("#name").val()
+      let phone_number = $("#phone_number").val()
       if (!name) {
         add_error("You must enter a name to bid (at the top of the page).")
+      }
+      else if (!phone_number) {
+        add_error("You must enter a phone number to bid (at the top of the page).")
       }
       else if (!price) {
         add_error("You must enter a price to bid on this item.")
       }
       else {
         $.ajax({
-          url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/',
+          url: '/bidding/add_bid/' + promise_id + '/' + price + '/' + name + '/' + phone_number + '/',
           contentType: "application/json",
           success: function (data) {
             let error = data["error"]

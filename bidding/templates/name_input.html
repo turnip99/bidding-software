@@ -11,10 +11,7 @@
   <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
   <form action="" method="post">
     {% csrf_token %}
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-    </div>
+    {% include "user_details.html" %}
     <input class="btn btn-primary w-100" type="submit" value="Join Auction">
   </form>
 </div>
