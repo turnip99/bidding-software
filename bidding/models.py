@@ -65,7 +65,10 @@ class Item(models.Model):
 
     def lowest_winning_price(self):
         additional_winners = self.additional_winners()
-        return float(additional_winners[-1]["price"])
+        if additional_winners:
+            return float(additional_winners[-1]["price"])
+        else:
+            return self.winning_price
 
     def highest_user_price(self, name, phone_number):
         highest_user_bid = Bid.objects.filter(item=self, name=name, phone_number=phone_number).order_by("-price").first()
