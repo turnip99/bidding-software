@@ -74,7 +74,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'biddingsoftware.wsgi.application'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 # Database

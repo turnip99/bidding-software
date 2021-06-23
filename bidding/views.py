@@ -77,7 +77,7 @@ def add_bid(request, item_id, price, name, phone_number):
     error = "You bid must be higher than base price (£" + item.formatted_base_price + ")."
   if error == "":
     Bid.objects.create(item=item, name=name, price=price, phone_number=phone_number)
-    if price > item.winning_price:
+    if not item.winning_price or price > item.winning_price:
       item.winning_price = price
       item.winning_name = name
       item.winning_phone_number = phone_number
