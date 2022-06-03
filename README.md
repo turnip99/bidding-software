@@ -5,14 +5,22 @@ Django Bidding Software for LSU Christian Union Promise Auction.
 - Ensure `DEBUG = True` in settings.py.
 - Run `pip install virtualenv`.
 - Run `bidding-software % virtualenv -p *PYTHON LOCATION* venv`, where python location is the result of `which python3`.
+- Add the exporting of environment variables to the bottom of `venv/bin/activate` by pasting in:
+```
+export DEBUG="True"
+export SECRET_KEY="foo"
+export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
+```
 - Enter the virtual environment using `source venv/bin/activate`.
 - Run `pip install django` in the venv.
-- Run `pip install django-import-export` in the venv.
 - Run `brew install postgresql` in the venv.
-- Run `pip install psycopg2-binary` in the venv.
+- Run `pip install gunicorn psycopg2-binary dj-database-url django-import-export` in the venv.
 - Run `python manage.py createsuperuser` in venv and enter a username/email/password.
 - Run `python manage.py runserver 0.0.0.0:8000` in the venv.
 - Open `http://0.0.0.0:8000/` in a browser.
+- Hit `CTRL+C` to exit the server.
+- Run `pip freeze > requirements.txt` to ensure that the requirements file is up to date.
+- Type `deactivate` to leave venv.
 
 # Set-up on live
 - https://docs.digitalocean.com/tutorials/app-deploy-django-app/

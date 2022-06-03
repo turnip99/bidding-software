@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
+import dj_database_url
 from pickle import FALSE
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,15 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#t5d*cr2jgf1x(n7w-_805(4j*0*xul-#^vol^+zx*+=!9d(ed'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", get_random_secret_key())
 
-ALLOWED_HOSTS = [
-    'lboropromiseauction.com',
-    'www.lboropromiseauction.com',
-    '127.0.0.1',
-    '0.0.0.0',
-    '178.62.119.124',
-]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "lboropromiseauction.com,www.lboropromiseauction.com").split(",")
 
 
 # Application definition
@@ -76,29 +73,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'biddingsoftware.wsgi.application'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-if DEBUG:
+if DEBUG is True:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        },
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'biddingdatabase',
-            'USER': 'admin',
-            'PASSWORD': 'password123',
-            'HOST': 'localhost',
-            'PORT': '',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
+    }
+elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if os.getenv("DATABASE_URL", None) is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+    DATABASES = {
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
 
 
