@@ -2,16 +2,16 @@
 
 {% block main %}
   <div class="m-2">
-    Name:<input type="text" class="form-control" id="txtName" onchange="fun()"/><br/>
-    Promises:<input type="text" class="form-control" id="txtPromises" onchange="fun()"/><br/>
-    Total:<input type="text" class="form-control" id="txtTotal" onchange="fun()"/><br/><br/>
+    Name:<input type="text" class="form-control" id="txtName" onchange="generate_message()"/><br/>
+    Promises:<input type="text" class="form-control" id="txtPromises" onchange="generate_message()"/><br/>
+    Total:<input type="text" class="form-control" id="txtTotal" onchange="generate_message()"/><br/><br/>
     Result:<textarea class="form-control" id="txtResult" rows="8" cols="80"></textarea>
   </div>
 
   <script type="text/javascript">
-    function fun()
+    function generate_message()
     {
-      txtResult.innerHTML = "Hi " + txtName.value + "! The promise auction results are out - you've won " + txtPromises.value + "! 😊\nPlease could you transfer the total of £" + txtTotal.value + " to Elle Water's account at: \nAccount number: 51775492 \nSort code: 54-41-44 \nReference: *your name*\n\nAny questions please don't hesitate to ask and thanks so much for getting involved in the promise auction! Cheers! 😁";
+      txtResult.innerHTML = "Hi " + txtName.value + "! The promise auction results are out - you've won " + txtPromises.value + "! 😊\nPlease could you transfer the total of £" + txtTotal.value + " toX's account at: \nAccount number: X \nSort code: X \nReference: *your name*\n\nAny questions please don't hesitate to ask and thanks so much for getting involved in the promise auction! Cheers! 😁";
     }
   </script>
 {% endblock %}

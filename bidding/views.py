@@ -87,4 +87,3 @@ def add_bid(request, item_id, price, name, phone_number):
 
 def message_generator(request):
   return render(request, 'message_generator.html', {})
-
