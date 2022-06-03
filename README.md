@@ -2,7 +2,7 @@
 Django Bidding Software for LSU Christian Union Promise Auction.
 
 # Set-up on local
-- Ensure DEBUG = True in settings.py.
+- Ensure `DEBUG = True` in settings.py.
 - Run `pip install virtualenv`.
 - Run `bidding-software % virtualenv -p *PYTHON LOCATION* venv`, where python location is the result of `which python3`.
 - Enter the virtual environment using `source venv/bin/activate`.
