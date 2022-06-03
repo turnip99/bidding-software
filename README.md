@@ -23,22 +23,8 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 - Type `deactivate` to leave venv.
 
 # Set-up on live
-- https://docs.digitalocean.com/tutorials/app-deploy-django-app/
+- Follow the second half of this tutorial to set up a app on DigitalOcean (or other cloud provider of choice). https://docs.digitalocean.com/tutorials/app-deploy-django-app/
 
 # How to use the software
 - Navigate to the /admin URL (e.g. `http://0.0.0.0:8000/admin` on local) and log in with your superuser account to add items to bid on.
 - Navigate to the base URL (e.g. `http://0.0.0.0:8000/` on local) to log in as a user and bid on promises.
-
-# MISC USEFUL COMMANDS
-
-sudo systemctl daemon-reload
-sudo systemctl restart gunicorn <—— use this one when code changes
-sudo systemctl start gunicorn.socket
-sudo systemctl enable gunicorn.socket
-sudo systemctl status gunicorn.socket
-sudo systemctl status gunicorn
-
-sudo nano /etc/systemd/system/gunicorn.socket
-sudo nano /etc/systemd/system/gunicorn.service
-
-Restart nginx: sudo nginx -t && sudo systemctl restart nginx
