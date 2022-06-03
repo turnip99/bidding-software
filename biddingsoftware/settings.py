@@ -26,6 +26,7 @@ ALLOWED_HOSTS = [
     'lboropromiseauction.com',
     'www.lboropromiseauction.com',
     '127.0.0.1',
+    '0.0.0.0',
     '178.62.119.124',
 ]
 
@@ -74,7 +75,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'biddingsoftware.wsgi.application'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 # Database
