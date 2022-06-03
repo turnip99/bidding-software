@@ -15,6 +15,7 @@ Django Bidding Software for LSU Christian Union Promise Auction.
 - Open `http://0.0.0.0:8000/` in a browser.
 
 # Set-up on live
+- https://docs.digitalocean.com/tutorials/app-deploy-django-app/
 
 # How to use the software
 - Navigate to the /admin URL (e.g. `http://0.0.0.0:8000/admin` on local) and log in with your superuser account to add items to bid on.
