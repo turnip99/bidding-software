@@ -1,5 +1,6 @@
 import locale
 
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 
@@ -8,6 +9,7 @@ from urllib.parse import quote
 
 
 def name_input(request):
+  print(settings.DEBUG)
   if request.method == 'GET':
     return render(request, 'name_input.html', {})
   else:
