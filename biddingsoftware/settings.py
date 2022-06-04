@@ -136,4 +136,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-mimetypes.add_type("text/css", ".css", True)
+mimetypes.add_type("text/html", ".css", True)
