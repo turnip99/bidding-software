@@ -9,7 +9,6 @@ from urllib.parse import quote
 
 
 def name_input(request):
-  print(settings.DEBUG)
   if request.method == 'GET':
     return render(request, 'name_input.html', {})
   else:
