@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import sys
 import dj_database_url
+import mimetypes
 from pickle import FALSE
 from django.core.management.utils import get_random_secret_key
 
@@ -134,3 +135,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+mimetypes.add_type("text/css", ".css", True)
