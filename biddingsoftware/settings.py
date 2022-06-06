@@ -14,6 +14,7 @@ import os
 import sys
 import dj_database_url
 import mimetypes
+from corsheaders.defaults import default_headers
 from pickle import FALSE
 from django.core.management.utils import get_random_secret_key
 
@@ -28,6 +29,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", get_random_secret_key())
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "lboropromiseauction.com,www.lboropromiseauction.com").split(",")
+
+CORS_ALLOWED_ORIGIN_REGEXES = (r"^[^:]*://localhost(:\d+)?$", r"")
+CORS_ALLOW_HEADERS = list(default_headers)
 
 
 # Application definition
@@ -44,6 +48,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
