@@ -8,7 +8,7 @@ Django Bidding Software for LSU Christian Union Promise Auction.
 - Add the exporting of environment variables to the bottom of `venv/bin/activate` by pasting in:
 ```
 export DEBUG="True"
-export SECRET_KEY="foo"
+export DJANGO_SECRET_KEY="foo"
 export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 ```
 - Enter the virtual environment using `source venv/bin/activate`.
