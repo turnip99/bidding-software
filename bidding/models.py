@@ -56,7 +56,8 @@ class Item(models.Model):
         winning_names_numbers = []
         if self.winning_price and self.winners_num > 1:
             for bid in self.bids():
-                if not in_winning_names_numbers(winning_names_numbers, bid) and bid.name != bid.item.winning_name and bid.phone_number != bid.item.winning_phone_number:
+                print(f"{bid} - {not in_winning_names_numbers(winning_names_numbers, bid)} | {(bid.name != bid.item.winning_name or bid.phone_number != bid.item.winning_phone_number)}")
+                if not in_winning_names_numbers(winning_names_numbers, bid) and (bid.name != bid.item.winning_name or bid.phone_number != bid.item.winning_phone_number):
                     additional_winners.append({"position": number_to_position(len(additional_winners)+2), "name": bid.name, "price": bid.formatted_price})
                     winning_names_numbers.append({"name": bid.name, "phone_number": bid.phone_number})
                 if len(additional_winners) == self.winners_num-1:
