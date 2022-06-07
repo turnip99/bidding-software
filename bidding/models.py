@@ -11,6 +11,9 @@ class AuctionSetting(models.Model):
     payment_sort_code = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
     payment_reference = models.CharField(max_length=20, blank=True, null=True, help_text="Used in the message generator.")
 
+    class Meta:
+        ordering = ("id",)
+
     def __str__(self):
         str = f"{self.auction_name}"
         if self.active:
@@ -19,12 +22,14 @@ class AuctionSetting(models.Model):
             str += " (INACTIVE)"
         return str
 
-    
-
 
 class AuctionDescriptionBulletPoint(models.Model):
     text = models.CharField(max_length=500, default="After the auction, you will be contacted with any promises that you have won.", help_text="The bullet points are displayed at the top of the bidding page. You may want to mention where the money raised will go going, the process to redeeming items, etc.")
     auction = models.ForeignKey(AuctionSetting, on_delete=models.CASCADE)
+    loc = models.IntegerField(default=0, help_text="Denotes the order that the bullet point appear compared to others.")
+
+    class Meta:
+        ordering = ("loc", "id")
 
     def __str__(self):
         return f"{self.auction.auction_name} - {self.text}"
@@ -40,6 +45,9 @@ class Item(models.Model):
     winning_phone_number = models.CharField(max_length=20, blank=True, null=True)
     winning_price = models.FloatField(max_length=0, blank=True, null=True)
     winners_num = models.IntegerField(default=1)
+
+    class Meta:
+        ordering = ("id",)
 
     def __str__(self):
         str = self.name

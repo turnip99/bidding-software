@@ -1,42 +1,54 @@
 import locale
+from re import template
 
 from django.conf import settings
-from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.views import generic
 
-from .models import Item, Bid
+from .models import AuctionSetting, Item, Bid
 from urllib.parse import quote
 
 
-def name_input(request):
-  if request.method == 'GET':
-    return render(request, 'name_input.html', {})
-  else:
+class AuctionSettingMixin(generic.base.ContextMixin):
+  def get_context_data(self, **kwargs):
+    ctxt = super().get_context_data(**kwargs)
+    ctxt["auction_setting"] = AuctionSetting.objects.filter(active=True).order_by("id").first()
+    return ctxt
+
+
+class NameInputView(AuctionSettingMixin, generic.TemplateView):
+  template_name = 'name_input.html'
+
+  def post(self, request, *args, **kwargs):
     return HttpResponseRedirect("/bidding/?name=" + quote(request.POST["name"]) + "&phone_number=" + quote(request.POST["phone_number"]))
+        
 
 
-def bidding(request):
-  items = Item.objects.all().order_by("-dt_closed")
-  items_upcoming = []
-  items_live = []
-  items_closed = []
-  for item in items:
-    item.additional_winners = item.additional_winners()
-    if item.live:
-      items_live.append(item)
-    elif item.closed:
-      items_closed.append(item)
-    else:
-      items_upcoming.append(item)
+class BiddingView(AuctionSettingMixin, generic.TemplateView):
+  template_name = 'bidding.html'
 
-  context = {
-    'items_upcoming': items_upcoming,
-    'items_live': items_live,
-    'items_closed': items_closed,
-  }
-  return render(request, 'bidding.html', context)
+  def get_context_data(self, **kwargs):
+    ctxt = super().get_context_data(**kwargs)
+    items = Item.objects.all().order_by("-dt_closed")
+    items_upcoming = []
+    items_live = []
+    items_closed = []
+    for item in items:
+      item.additional_winners = item.additional_winners()
+      if item.live:
+        items_live.append(item)
+      elif item.closed:
+        items_closed.append(item)
+      else:
+        items_upcoming.append(item)
+    ctxt["items_upcoming"] = items_upcoming
+    ctxt["items_live"] = items_live
+    ctxt["items_closed"] = items_closed
+    return ctxt
 
 
+# Called by ajax.
 def update_bids(request):
   items = Item.objects.all()
   item_updates = {}
@@ -49,6 +61,7 @@ def update_bids(request):
   return JsonResponse({'item_updates': item_updates})
 
 
+# Called by ajax.
 def add_bid(request, item_id, price, name, phone_number):
   item = get_object_or_404(Item, id=item_id)
   error = ""
@@ -86,5 +99,5 @@ def add_bid(request, item_id, price, name, phone_number):
   return JsonResponse({'error': error})
 
 
-def message_generator(request):
-  return render(request, 'message_generator.html', {})
+class MessageGeneratorView(AuctionSettingMixin, generic.TemplateView):
+  template_name = 'message_generator.html'
