@@ -3,7 +3,7 @@
 {% block below_nav_buttons %}
   <div class="m-2">
     Name:<input type="text" class="form-control" id="txtName" onchange="generate_message()"/><br/>
-    Promises:<input type="text" class="form-control" id="txtPromises" onchange="generate_message()"/><br/>
+    Items:<input type="text" class="form-control" id="txtItems" onchange="generate_message()"/><br/>
     Total:<input type="text" class="form-control" id="txtTotal" onchange="generate_message()"/><br/><br/>
     Result:<textarea class="form-control" id="txtResult" rows="8" cols="80"></textarea>
   </div>
@@ -11,7 +11,7 @@
   <script type="text/javascript">
     function generate_message() {
       txtResult.innerHTML = 
-      `Hi ${txtName.value}! The {% if auction_setting.is_promise_auction %}promise {% endif %} auction results are out - you've won ${txtPromises.value}! 😊
+      `Hi ${txtName.value}! The {% if auction_setting.is_promise_auction %}promise {% endif %}auction results are out - you've won ${txtItems.value}! 😊
 Please could you transfer the total of £${txtTotal.value} to {{ auction_setting.payment_account_holder_name }}'s account at:
 Account number: {{ auction_setting.payment_account_number }}
 Sort code: {{ auction_setting.payment_sort_code }}
