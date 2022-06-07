@@ -53,7 +53,7 @@ class Item(models.Model):
     def __str__(self):
         string = self.name
         if self.winning_price:
-            string += " (" + self.winning_name + " - " + string(self.winning_price) + ")"
+            string += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
         return string
 
     @property
