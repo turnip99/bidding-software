@@ -3,10 +3,12 @@ import locale
 from re import template
 
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.auth.decorators import user_passes_test
 
 from .models import AuctionSetting, Item, Bid
 from urllib.parse import quote
@@ -122,9 +124,12 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
   template_name = "leaderboard.html"
 
 
-class AdminPanelView(AuctionSettingMixin, generic.TemplateView):
+class AdminPanelView(LoginRequiredMixin, UserPassesTestMixin, AuctionSettingMixin, generic.TemplateView):
   template_name = "admin_panel.html"
 
+  def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
 
-class MessageGeneratorView(AuctionSettingMixin, generic.TemplateView):
+
+class MessageGeneratorView(LoginRequiredMixin, UserPassesTestMixin, AuctionSettingMixin, generic.TemplateView):
   template_name = 'message_generator.html'
