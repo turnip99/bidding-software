@@ -14,7 +14,7 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 - Enter the virtual environment using `source venv/bin/activate`.
 - Run `pip install django` in the venv.
 - Run `brew install postgresql` in the venv.
-- Run `pip install gunicorn psycopg2-binary dj-database-url django-import-export` in the venv.
+- Run `pip install gunicorn psycopg2-binary dj-database-url django-import-export django-cors-headers` in the venv.
 - Run `python manage.py createsuperuser` in venv and enter a username/email/password.
 - Run `python manage.py runserver 0.0.0.0:8000` in the venv.
 - Open `localhost:8000` in a browser.
