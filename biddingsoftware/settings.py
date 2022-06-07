@@ -33,6 +33,8 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "lboropromiseauction.com,
 CORS_ALLOWED_ORIGIN_REGEXES = (r"^[^:]*://localhost(:\d+)?$", r"")
 CORS_ALLOW_HEADERS = list(default_headers)
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 
 # Application definition
 
