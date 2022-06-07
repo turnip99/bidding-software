@@ -137,9 +137,10 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
       else:
         leaderboard_dict[item_winner["name_phone_number"]] = {"total_spend": item_winner["price_raw"], "name": item_winner["name"], "won_items": []}
       leaderboard_dict[item_winner["name_phone_number"]]["won_items"].append(f"{item_winner['item']} (£{item_winner['price']})")
-    for i, bidder in leaderboard_dict.items():
-      bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
     leaderboard_dict = collections.OrderedDict(sorted(leaderboard_dict.items(), key=lambda t:t[1]["total_spend"], reverse=True))
+    for _i, bidder in leaderboard_dict.items():
+      bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
+      bidder["total_spend"] = '{:0,.2f}'.format(bidder["total_spend"])
     ctxt["leaderboard_dict"] = leaderboard_dict
     return ctxt
 
