@@ -9,9 +9,15 @@
   </div>
 
   <script type="text/javascript">
-    function generate_message()
-    {
-      txtResult.innerHTML = "Hi " + txtName.value + "! The promise auction results are out - you've won " + txtPromises.value + "! 😊\nPlease could you transfer the total of £" + txtTotal.value + " toX's account at: \nAccount number: X \nSort code: X \nReference: *your name*\n\nAny questions please don't hesitate to ask and thanks so much for getting involved in the promise auction! Cheers! 😁";
+    function generate_message() {
+      txtResult.innerHTML = 
+      `Hi ${txtName.value}! The {% if auction_setting.is_promise_auction %}promise {% endif %} auction results are out - you've won ${txtPromises.value}! 😊
+Please could you transfer the total of £${txtTotal.value} to {{ auction_setting.payment_account_holder_name }}'s account at:
+Account number: {{ auction_setting.payment_account_number }}
+Sort code: {{ auction_setting.payment_sort_code }}
+Reference: {{ auction_setting.payment_reference }}
+  
+Any questions please don't hesitate to ask and thanks so much for getting involved in the {% if auction_setting.is_promise_auction %}promise {% endif %}auction! Cheers! 😁`;
     }
   </script>
 {% endblock %}

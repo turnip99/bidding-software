@@ -1,20 +1,37 @@
+from audioop import reverse
 import locale
 from re import template
 
 from django.conf import settings
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import generic
 
 from .models import AuctionSetting, Item, Bid
 from urllib.parse import quote
 
 
-class AuctionSettingMixin(generic.base.ContextMixin):
+class AuctionSettingMixin:
+  def __init__(self, **kwargs):
+      super().__init__(**kwargs)
+      self.active_auctions = None
+
+  def dispatch(self, request, *args, **kwargs):
+    self.active_auctions = AuctionSetting.objects.filter(active=True).order_by("id")
+    if not self.active_auctions:
+        return HttpResponseRedirect(reverse_lazy("no_active_auction_error"))
+    return super().dispatch(request, *args, **kwargs)
+
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
-    ctxt["auction_setting"] = AuctionSetting.objects.filter(active=True).order_by("id").first()
+    ctxt["auction_setting"] = self.active_auctions.first()
     return ctxt
+
+    
+class NoActiveAuctionErrorView(generic.TemplateView):
+  template_name = "no_active_auction_error.html"
+
 
 
 class NameInputView(AuctionSettingMixin, generic.TemplateView):

@@ -3,7 +3,7 @@
 {% block main %}
 
   <div class="m-2">
-    <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
+    <h1 class="blue">Welcome to the {{ auction_setting.auction_name }}!</h1>
     <form action="" method="post">
       {% csrf_token %}
       {% include "user_details.html" %}

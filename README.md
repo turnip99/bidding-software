@@ -1,5 +1,5 @@
 # bidding-software
-Django Bidding Software for LSU Christian Union Promise Auction.
+Django Bidding Software for online auctions/promise auctions. Originally built for LSU Christian Union's annual promise auction.
 
 # Set-up on local
 - Ensure `DEBUG = True` in settings.py.

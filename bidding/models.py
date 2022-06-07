@@ -9,7 +9,7 @@ class AuctionSetting(models.Model):
     payment_account_holder_name = models.CharField(max_length=100, blank=True, null=True, help_text="Used in the message generator.")
     payment_account_number = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
     payment_sort_code = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
-    payment_reference = models.CharField(max_length=20, blank=True, null=True, help_text="Used in the message generator.")
+    payment_reference = models.CharField(max_length=20, blank=True, null=True, default="*your name*", help_text="Used in the message generator.")
 
     class Meta:
         ordering = ("id",)

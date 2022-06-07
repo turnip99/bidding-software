@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),),
     path('', views.NameInputView.as_view(), name='name_input'),
+    path('no_active_auction_error/', views.NoActiveAuctionErrorView.as_view(), name='no_active_auction_error'),
     path('bidding/', views.BiddingView.as_view(), name='bidding'),
     path('bidding/update_bids/', views.update_bids, name='update_bids'),
     path('bidding/add_bid/<int:item_id>/<str:price>/<str:name>/<str:phone_number>/', views.add_bid, name='add_bid'),

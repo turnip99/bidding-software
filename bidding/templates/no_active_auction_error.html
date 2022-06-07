@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="alert alert-danger">There are no active auctions. If you are an administrator, please <a href="{% url 'admin:bidding_auctionsetting_changelist' %}">add/activate an auction.</a></div>
+{% endblock %}

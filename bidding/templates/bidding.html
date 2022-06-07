@@ -21,16 +21,19 @@
   </style>
 
   <div class="m-2">
-    <h1 class="blue">Welcome to the Promise Auction Bidding System!</h1>
+    <h1 class="blue">Welcome to the {{ auction_setting.auction_name }}!</h1>
     {% include "user_details.html" %}
     <hr/>
-    <ul class="px-4 blue">
-      <li>After the auction, you will be contacted with any promises that you have won.</li>
-      <li>20% of all money raised will go towards Bethany and Amber's Relay program with UCCF.</li>
-      <li>The rest of the proceeds will go towards the CU mission for next year, in particular for fresher's week!</li>
-      <li>Unless stated otherwise, the promises have no expiry date!</li>
-    </ul>
-    <hr/>
+    {% with auction_setting.auctiondescriptionbulletpoint_set.all as adbps %}
+      {% if adbps %}
+        <ul class="px-4 blue">
+          {% for adbp in adbps %}
+            <li>{{ adbp.text }}</li>
+          {% endfor %}
+        </ul>
+        <hr/>
+      {% endif %}
+    {% endwith %}
 
     <div id="accordion">
 
