@@ -1,10 +1,29 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <div class="btn-group d-flex" role="group"">
-        <a href="{% url 'bidding' %}" class="btn btn-outline-primary w-100">Start Bidding</a>
-        <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary w-100">View Leaderboard</a>
-        <a href="{% url 'admin_panel' %}" class="btn btn-outline-danger w-50">Admin Panel</a>
+    <div class="btn-group d-flex" role="group">
+        <button onclick="navigateToURL(`{% url 'bidding' %}`)" class="btn btn-outline-primary w-100">Start Bidding</button>
+        <button onclick="navigateToURL(`{% url 'leaderboard' %}`)" class="btn btn-outline-primary w-100">View Leaderboard</button>
+        <button onclick="navigateToURL(`{% url 'admin_panel' %}`)" class="btn btn-outline-danger w-50">Admin Panel</button>
     </div>
     {% block below_nav_buttons %}{% endblock %}
+    <script>
+        function navigateToURL(url) {
+            var name_input = $("#name")
+            if (name_input.length) {
+                url += "?name=" + name_input.val()
+            }
+            else {
+                url += "?name={{ name }}"
+            }
+            var phone_number_input = $("#phone_number")
+            if (phone_number_input.length) {
+                url += "&phone_number=" + phone_number_input.val()
+            }
+            else {
+                url += "&phone_number={{ phone_number }}"
+            }
+            window.location.href = url
+        }
+    </script>
 {% endblock %}

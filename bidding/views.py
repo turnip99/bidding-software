@@ -26,6 +26,8 @@ class AuctionSettingMixin:
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
     ctxt["auction_setting"] = self.active_auctions.first()
+    ctxt["name"] = self.request.GET.get("name", "")
+    ctxt["phone_number"] = self.request.GET.get("phone_number", "")    
     return ctxt
 
     
