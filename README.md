@@ -17,7 +17,7 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 - Run `pip install gunicorn psycopg2-binary dj-database-url django-import-export` in the venv.
 - Run `python manage.py createsuperuser` in venv and enter a username/email/password.
 - Run `python manage.py runserver 0.0.0.0:8000` in the venv.
-- Open `http://0.0.0.0:8000/` in a browser.
+- Open `localhost:8000` in a browser.
 - Hit `CTRL+C` to exit the server.
 - Run `pip freeze > requirements.txt` to ensure that the requirements file is up to date.
 - Type `deactivate` to leave venv.
