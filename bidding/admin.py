@@ -11,7 +11,7 @@ class CustomImportExportModelAdmin(ImportExportModelAdmin):
 
 class AuctionDescriptionBulletPointInline(admin.TabularInline):
     model = AuctionDescriptionBulletPoint
-    fields = ("text",)
+    fields = ("text", "loc")
 
 
 @admin.register(AuctionSetting)
