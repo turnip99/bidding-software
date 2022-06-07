@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="btn-group d-flex" role="group"">
+        <a href="{% url 'bidding' %}" class="btn btn-outline-primary w-100">Start Bidding</a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary w-100">View Leaderboard</a>
+        <a href="{% url 'admin_panel' %}" class="btn btn-outline-danger w-50">Admin Panel</a>
+    </div>
+    {% block below_nav_buttons %}{% endblock %}
+{% endblock %}

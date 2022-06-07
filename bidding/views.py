@@ -116,5 +116,13 @@ def add_bid(request, item_id, price, name, phone_number):
   return JsonResponse({'error': error})
 
 
+class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
+  template_name = "leaderboard.html"
+
+
+class AdminPanelView(AuctionSettingMixin, generic.TemplateView):
+  template_name = "admin_panel.html"
+
+
 class MessageGeneratorView(AuctionSettingMixin, generic.TemplateView):
   template_name = 'message_generator.html'

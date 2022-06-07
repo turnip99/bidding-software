@@ -1,7 +1,6 @@
-{% extends "base.html" %}
+{% extends "nav_buttons_base.html" %}
 
-{% block main %}
-
+{% block below_nav_buttons %}
   <div class="m-2">
     <h1 class="blue">Welcome to the {{ auction_setting.auction_name }}!</h1>
     <form action="" method="post">
@@ -10,5 +9,4 @@
       <input class="btn btn-primary w-100" type="submit" value="Join Auction">
     </form>
   </div>
-
 {% endblock %}
