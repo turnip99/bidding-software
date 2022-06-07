@@ -1,14 +1,11 @@
-from audioop import reverse
-import locale
-from re import template
+import collections
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.decorators import user_passes_test
 
 from .models import AuctionSetting, Item, Bid
 from urllib.parse import quote
@@ -122,6 +119,30 @@ def add_bid(request, item_id, price, name, phone_number):
 
 class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
   template_name = "leaderboard.html"
+
+  def get_context_data(self, **kwargs):
+    ctxt = super().get_context_data(**kwargs)
+    items = Item.objects.all().order_by("-dt_closed")
+    item_winners = []
+    for item in items:
+      if (item.live or item.closed) and item.winning_name:
+        item_winners.append({"item": f"{item.promiser} - {item.name}", "name": item.winning_name, "name_phone_number": f"{item.winning_name}_{item.winning_phone_number}", "price": item.formatted_winning_price, "price_raw": item.winning_price})
+        item.additional_winners = item.additional_winners()
+        for winner in item.additional_winners:
+          item_winners.append({"item": f"{item.promiser} - {item.name}", "name": winner["name"], "name_phone_number": f"{winner['name']}_{winner['phone_number']}", "price": winner["price"], "price_raw": winner["price_raw"]})
+    leaderboard_dict = {}
+    for item_winner in item_winners:
+      if item_winner["name_phone_number"] in leaderboard_dict.keys():
+        leaderboard_dict[item_winner["name_phone_number"]]["total_spend"] += item_winner["price_raw"]
+      else:
+        leaderboard_dict[item_winner["name_phone_number"]] = {"total_spend": item_winner["price_raw"], "name": item_winner["name"], "won_items": []}
+      leaderboard_dict[item_winner["name_phone_number"]]["won_items"].append(f"{item_winner['item']} (£{item_winner['price']})")
+    for i, bidder in leaderboard_dict.items():
+      bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
+    leaderboard_dict = collections.OrderedDict(sorted(leaderboard_dict.items(), key=lambda t:t[1]["total_spend"], reverse=True))
+    ctxt["leaderboard_dict"] = leaderboard_dict
+    return ctxt
+
 
 
 class SuperuserOnlyMixin(LoginRequiredMixin, UserPassesTestMixin):

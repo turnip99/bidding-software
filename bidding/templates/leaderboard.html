@@ -1,6 +1,28 @@
 {% extends "nav_buttons_base.html" %}
 
 {% block below_nav_buttons %}
+  <div class="m-2">
+    <h1 class="blue">{{ auction_setting.auction_name }} Leaderboard</h2>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Total Spend</th>
+          <th scope="col">Items</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i, bidder in leaderboard_dict.items %}
+          <tr>
+            <th scope="row">{{ bidder.name }}</th>
+            <td>£{{ bidder.total_spend }}</td>
+            <td>{{ bidder.won_items }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
   <script>
       $("#nav_leaderboard").addClass("active")
   </script>
