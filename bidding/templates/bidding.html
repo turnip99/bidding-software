@@ -237,8 +237,9 @@
   </div>
 
   <script>
+    $("#nav_bidding").addClass("active")
     updateBids();
-
+    
     function updateBids(){
       $.ajax({
         url: '/bidding/update_bids/',

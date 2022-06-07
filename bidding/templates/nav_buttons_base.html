@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <div class="btn-group d-flex" role="group">
-        <button onclick="navigateToURL(`{% url 'bidding' %}`)" class="btn btn-outline-primary w-100">Start Bidding</button>
-        <button onclick="navigateToURL(`{% url 'leaderboard' %}`)" class="btn btn-outline-primary w-100">View Leaderboard</button>
-        <button onclick="navigateToURL(`{% url 'admin_panel' %}`)" class="btn btn-outline-danger w-50">Admin Panel</button>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">{{ auction_setting.auction_name }}</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" id="nav_bidding">
+                    <a onclick="navigateToURL(`{% url 'bidding' %}`)" href="#" role="button" class="nav-link">Start Bidding</a>
+                </li>
+                <li class="nav-item" id="nav_leaderboard">
+                    <a onclick="navigateToURL(`{% url 'leaderboard' %}`)" href="#" role="button" class="nav-link">View Leaderboard</a>
+                </li>
+                {% if request.user.is_superuser %}
+                    <li class="nav-item" id="nav_admin_panel">
+                        <a onclick="navigateToURL(`{% url 'admin_panel' %}`)" href="#" role="button" class="nav-link">Admin panel</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
     {% block below_nav_buttons %}{% endblock %}
     <script>
         function navigateToURL(url) {

@@ -1,5 +1,20 @@
 {% extends "nav_buttons_base.html" %}
 
 {% block below_nav_buttons %}
-  
+    <br/>
+    <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'message_generator' %}">
+        Message Generator
+    </a>
+    <a class="btn btn-outline-danger btn-lg btn-block" href="{% url 'admin:index' %}">
+        Django Admin - Home
+    </a>
+    <a class="btn btn-outline-danger btn-lg btn-block" href="{% url 'admin:bidding_auctionsetting_change' auction_setting.id %}">
+        Django Admin - Update current auction's settings
+    </a>
+    <a class="btn btn-outline-danger btn-lg btn-block" href="{% url 'admin:bidding_item_changelist' %}">
+        Django Admin - View/import items
+    </a>
+    <script>
+      $("#nav_admin_panel").addClass("active")
+  </script>
 {% endblock %}
