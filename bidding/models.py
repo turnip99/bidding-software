@@ -2,6 +2,34 @@ from django.db import models
 from django.utils import timezone
 
 
+class AuctionSetting(models.Model):
+    active = models.BooleanField(default=False)
+    auction_name = models.CharField(max_length=500, default="Promise Auction Bidding System")
+    is_promise_auction = models.BooleanField(default=True, verbose_name="Is this a promise auction (as opposed to a conventional auction)?")
+    payment_account_holder_name = models.CharField(max_length=100, blank=True, null=True, help_text="Used in the message generator.")
+    payment_account_number = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
+    payment_sort_code = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
+    payment_reference = models.CharField(max_length=20, blank=True, null=True, help_text="Used in the message generator.")
+
+    def __str__(self):
+        str = f"{self.auction_name}"
+        if self.active:
+            str += " (ACTIVE)"
+        else:
+            str += " (INACTIVE)"
+        return str
+
+    
+
+
+class AuctionDescriptionBulletPoint(models.Model):
+    text = models.CharField(max_length=500, default="After the auction, you will be contacted with any promises that you have won.", help_text="The bullet points are displayed at the top of the bidding page. You may want to mention where the money raised will go going, the process to redeeming items, etc.")
+    auction = models.ForeignKey(AuctionSetting, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.auction.auction_name} - {self.text}"
+
+
 class Item(models.Model):
     promiser = models.CharField(max_length=50)
     name = models.CharField(max_length=500)
@@ -14,10 +42,10 @@ class Item(models.Model):
     winners_num = models.IntegerField(default=1)
 
     def __str__(self):
-        string = self.name
+        str = self.name
         if self.winning_price:
-            string += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
-        return string
+            str += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
+        return str
 
     @property
     def status(self):
@@ -56,7 +84,6 @@ class Item(models.Model):
         winning_names_numbers = []
         if self.winning_price and self.winners_num > 1:
             for bid in self.bids():
-                print(f"{bid} - {not in_winning_names_numbers(winning_names_numbers, bid)} | {(bid.name != bid.item.winning_name or bid.phone_number != bid.item.winning_phone_number)}")
                 if not in_winning_names_numbers(winning_names_numbers, bid) and (bid.name != bid.item.winning_name or bid.phone_number != bid.item.winning_phone_number):
                     additional_winners.append({"position": number_to_position(len(additional_winners)+2), "name": bid.name, "price": bid.formatted_price})
                     winning_names_numbers.append({"name": bid.name, "phone_number": bid.phone_number})
