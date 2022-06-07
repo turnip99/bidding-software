@@ -124,12 +124,17 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
   template_name = "leaderboard.html"
 
 
-class AdminPanelView(LoginRequiredMixin, UserPassesTestMixin, AuctionSettingMixin, generic.TemplateView):
+class SuperuserOnlyMixin(LoginRequiredMixin, UserPassesTestMixin):
+  def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+
+class AdminPanelView(SuperuserOnlyMixin, AuctionSettingMixin, generic.TemplateView):
   template_name = "admin_panel.html"
 
   def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
 
 
-class MessageGeneratorView(LoginRequiredMixin, UserPassesTestMixin, AuctionSettingMixin, generic.TemplateView):
+class MessageGeneratorView(SuperuserOnlyMixin, AuctionSettingMixin, generic.TemplateView):
   template_name = 'message_generator.html'
