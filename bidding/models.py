@@ -1,3 +1,4 @@
+from tokenize import String
 from django.db import models
 from django.utils import timezone
 
@@ -15,12 +16,12 @@ class AuctionSetting(models.Model):
         ordering = ("id",)
 
     def __str__(self):
-        str = f"{self.auction_name}"
+        string = f"{self.auction_name}"
         if self.active:
-            str += " (ACTIVE)"
+            string += " (ACTIVE)"
         else:
-            str += " (INACTIVE)"
-        return str
+            string += " (INACTIVE)"
+        return string
 
 
 class AuctionDescriptionBulletPoint(models.Model):
@@ -50,10 +51,10 @@ class Item(models.Model):
         ordering = ("id",)
 
     def __str__(self):
-        str = self.name
+        string = self.name
         if self.winning_price:
-            str += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
-        return str
+            string += " (" + self.winning_name + " - " + string(self.winning_price) + ")"
+        return string
 
     @property
     def status(self):
