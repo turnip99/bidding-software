@@ -21,12 +21,12 @@
   </style>
 
   <div class="m-2">
-    <h1 class="blue">Welcome to the {{ auction_setting.auction_name }}!</h1>
+    <h1 class="primary-colour">Welcome to the {{ auction_setting.auction_name }}!</h1>
     {% include "user_details.html" %}
     <hr/>
     {% with auction_setting.auctiondescriptionbulletpoint_set.all as adbps %}
       {% if adbps %}
-        <ul class="px-4 blue">
+        <ul class="px-4 primary-colour">
           {% for adbp in adbps %}
             <li>{{ adbp.text }}</li>
           {% endfor %}
@@ -57,7 +57,7 @@
                     <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1">
                       Starting price: £{{ item.formatted_base_price }}
                     </div>
-                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue d-none">
+                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 primary-colour d-none">
                       Winning bid:
                       <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                       <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -115,7 +115,7 @@
                     <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1 {% if item.winning_price %} d-none{% endif %}">
                       Starting price: £{{ item.formatted_base_price }}
                     </div>
-                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue {% if not item.winning_price %} d-none{% endif %}">
+                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 primary-colour {% if not item.winning_price %} d-none{% endif %}">
                       Winning bid:
                       <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                       <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -173,7 +173,7 @@
                     <div id="starting_price_{{ item.id }}" class="col-md-6 col-12 pb-1 d-none">
                       Starting price: £{{ item.formatted_base_price }}
                     </div>
-                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 blue">
+                    <div id="winning_bid_{{ item.id }}" class="col-md-6 col-12 pb-1 primary-colour">
                       Winning bid:
                       <span class="winning_price">{% if item.winning_price %}£{{ item.formatted_winning_price }}{% else %}None{% endif %}</span>
                       <span class="winning_name">{% if item.winning_name %}({{ item.winning_name }}){% endif %}</span>
@@ -329,7 +329,7 @@
         else if (!price) {
           add_error("You must - a price to bid on this item.")
         }
-        else if (price > 999.99) {
+        else if (price > {{ auction_setting.max_bid }}) {
           add_error("Please enter a reasonable price - we're not convinced you're that rich!")
         }
         else {

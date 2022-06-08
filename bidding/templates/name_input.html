@@ -2,7 +2,7 @@
 
 {% block below_nav_buttons %}
   <div class="m-2">
-    <h1 class="blue">Welcome to the {{ auction_setting.auction_name }}!</h1>
+    <h1 class="primary-colour">Welcome to the {{ auction_setting.auction_name }}!</h1>
     <form action="" method="post">
       {% csrf_token %}
       {% include "user_details.html" %}
