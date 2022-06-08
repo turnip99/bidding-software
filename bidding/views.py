@@ -124,6 +124,7 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
     ctxt = super().get_context_data(**kwargs)
     items = Item.objects.all().order_by("-dt_closed")
     item_winners = []
+    total_raised = 0
     for item in items:
       if (item.live or item.closed) and item.winning_name:
         item_winners.append({"item": f"{item.promiser} - {item.name}", "name": item.winning_name, "name_phone_number": f"{item.winning_name}_{item.winning_phone_number}", "price": item.formatted_winning_price, "price_raw": item.winning_price})
@@ -146,9 +147,11 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
         highest_promise_count = promise_count
       bidder["promises_count"] = promise_count
       bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
+      total_raised += bidder["total_spend"]
       bidder["total_spend"] = '{:0,.2f}'.format(bidder["total_spend"])
     ctxt["leaderboard_dict"] = leaderboard_dict
     ctxt["highest_promise_count"] = highest_promise_count
+    ctxt["total_raised"] = '{:0,.2f}'.format(total_raised)
     return ctxt
 
 
