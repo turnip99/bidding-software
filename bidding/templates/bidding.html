@@ -308,14 +308,14 @@
       setTimeout(updateBids, 5000);
     }
 
-    $('.bid-price').keyup(function(e){
+    $(document).on("keyup", ".bid-price", function(e){
       if(e.keyCode == 13)
       {
         $(this).parent().find(".btn-bid").click()
       }
     });
 
-    $(".btn-bid").click(function() {
+    $(document).on("click", ".btn-bid", function() {
         let promise_id = $(this).attr("data-promise-id")
         let price = $(this).parent().find(".bid-price").val()
         let name = $("#name").val()

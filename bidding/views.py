@@ -48,7 +48,7 @@ class BiddingView(AuctionSettingMixin, generic.TemplateView):
 
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
-    items = Item.objects.all().order_by("-dt_closed")
+    items = Item.objects.all().order_by("-dt_closed", "id")
     items_upcoming = []
     items_live = []
     items_closed = []
