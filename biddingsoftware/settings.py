@@ -143,6 +143,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-
-mimetypes.add_type("text/html", ".html", True)
-

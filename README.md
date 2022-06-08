@@ -23,8 +23,9 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 - Type `deactivate` to leave venv.
 
 # Set-up on live
-- Follow the second half of this tutorial to set up a app on DigitalOcean (or other cloud provider of choice). https://docs.digitalocean.com/tutorials/app-deploy-django-app/
+- Follow the second half of the following tutorial to set up a app on DigitalOcean. https://docs.digitalocean.com/tutorials/app-deploy-django-app/
+- If you follow the above guide, you may encounter issues in step 5 while setting static files. If this is the case, you can upload the DigitalOcean app specification found at `bidding-software/lboro-promise-auction.yaml`, which should hopefully rectify any issues.
 
 # How to use the software
-- Navigate to the /admin URL (e.g. `http://0.0.0.0:8000/admin` on local) and log in with your superuser account to add items to bid on.
+- Navigate to the /admin URL (e.g. `http://0.0.0.0:8000/admin` on local) and log in with your superuser account to add items to bid on. You can import `bidding_software/item_import_template.csv` to add some demo data for testing.
 - Navigate to the base URL (e.g. `http://0.0.0.0:8000/` on local) to log in as a user and bid on promises.

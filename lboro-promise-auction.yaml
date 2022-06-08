@@ -1,0 +1,44 @@
+databases:
+- engine: PG
+  name: db
+  num_nodes: 1
+  size: professional-xs
+  version: "12"
+envs:
+- key: DJANGO_ALLOWED_HOSTS
+  scope: RUN_AND_BUILD_TIME
+  value: ${APP_DOMAIN}
+- key: DATABASE_URL
+  scope: RUN_AND_BUILD_TIME
+  value: ${db.DATABASE_URL}
+- key: DEBUG
+  scope: RUN_AND_BUILD_TIME
+  value: "False"
+- key: DJANGO_SECRET_KEY
+  scope: RUN_AND_BUILD_TIME
+  value: '{sVCbd</9)v_RAS^f?3n]6)+@4]YwQeP'
+name: lboro-promise-auction
+region: lon
+services:
+- environment_slug: python
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: turnip99/bidding-software
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-s
+  name: bidding-software
+  routes:
+  - path: /
+  run_command: gunicorn --worker-tmp-dir /dev/shm biddingsoftware.wsgi
+  source_dir: /
+static_sites:
+- name: static
+  github:
+    repo: turnip99/bidding-software
+    branch: master
+    deploy_on_push: true
+  output_dir: staticfiles
+  routes:
+  - path: /static
