@@ -8,14 +8,16 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Spend</th>
+          <th scope="col">Quantity</th>
           <th scope="col">Items</th>
         </tr>
       </thead>
       <tbody>
         {% for i, bidder in leaderboard_dict.items %}
-          <tr>
+          <tr{% if bidder.promises_count == highest_promise_count %} class="table-success"  data-toggle="tooltip" data-placement="bottom" title="Quantity award"{% endif %}>
             <th scope="row">{{ bidder.name }}</th>
             <td>£{{ bidder.total_spend }}</td>
+            <td>{{ bidder.promises_count }}</td>
             <td>{{ bidder.won_items }}</td>
           </tr>
         {% endfor %}
@@ -25,5 +27,6 @@
 
   <script>
       $("#nav_leaderboard").addClass("active")
+      $('[data-toggle="tooltip"]').tooltip();
   </script>
 {% endblock %}
