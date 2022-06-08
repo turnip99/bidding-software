@@ -334,7 +334,7 @@
         }
         else {
           bootbox.confirm({
-            message: "Are you sure that you wish to bid £" + price + " on this promise?",
+            message: "Are you sure that you wish to bid £" + price + " on this {% if auction_setting.is_promise_auction %}promise{% else %}item{% endif %}?",
             buttons: {
               confirm: {
                 label: 'Yes',
@@ -356,7 +356,7 @@
                       add_error(error)
                     }
                     else {
-                      add_success("You have successfully bid £" + price + " on this promise!")
+                      add_success("You have successfully bid £" + price + " on this {% if auction_setting.is_promise_auction %}promise{% else %}item{% endif %}!")
                       updateBids()
                     }
                   }
