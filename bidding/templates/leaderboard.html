@@ -3,6 +3,7 @@
 {% block below_nav_buttons %}
   <div class="m-2">
     <h1 class="primary-colour">{{ auction_setting.auction_name }} Leaderboard</h2>
+    {% if auction_setting.leaderboard_spaces %}<p class="text-muted">Showing the highest {{ auction_setting.leaderboard_spaces }} bidders.</p>{% endif %}
     <table class="table">
       <thead class="thead-dark">
         <tr>

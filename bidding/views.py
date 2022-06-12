@@ -1,8 +1,9 @@
 import collections
+import itertools
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -17,14 +18,16 @@ class AuctionSettingMixin:
       self.active_auctions = None
 
   def dispatch(self, request, *args, **kwargs):
-    self.active_auctions = AuctionSetting.objects.filter(active=True).order_by("id")
-    if not self.active_auctions:
+    active_auctions = AuctionSetting.objects.filter(active=True).order_by("id")
+    if not active_auctions:
         return HttpResponseRedirect(reverse_lazy("no_active_auction_error"))
+    else:
+      self.auction_setting = active_auctions.first()
     return super().dispatch(request, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
-    ctxt["auction_setting"] = self.active_auctions.first()
+    ctxt["auction_setting"] = self.auction_setting
     ctxt["name"] = self.request.GET.get("name", "")
     ctxt["phone_number"] = self.request.GET.get("phone_number", "")    
     return ctxt
@@ -120,6 +123,12 @@ def add_bid(request, item_id, price, name, phone_number):
 class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
   template_name = "leaderboard.html"
 
+  def dispatch(self, request, *args, **kwargs):
+    response = super().dispatch(request, *args, **kwargs)
+    if not self.auction_setting.enable_leaderboard:
+      raise Http404
+    return response
+
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
     items = Item.objects.all().order_by("-dt_closed")
@@ -139,16 +148,23 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
         leaderboard_dict[item_winner["name_phone_number"]] = {"total_spend": item_winner["price_raw"], "name": item_winner["name"], "won_items": []}
       leaderboard_dict[item_winner["name_phone_number"]]["won_items"].append(f"{item_winner['item']} (£{item_winner['price']})")
     leaderboard_dict = collections.OrderedDict(sorted(leaderboard_dict.items(), key=lambda t:t[1]["total_spend"], reverse=True))
-    
+
     highest_promise_count = 0
     for _i, bidder in leaderboard_dict.items():
       promise_count = len(bidder["won_items"])
       if promise_count > highest_promise_count:
         highest_promise_count = promise_count
       bidder["promises_count"] = promise_count
-      bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
       total_raised += bidder["total_spend"]
+
+    if self.auction_setting.leaderboard_spaces:
+      for k in list(leaderboard_dict.keys())[self.auction_setting.leaderboard_spaces:]:
+        leaderboard_dict.pop(k)
+
+    for _i, bidder in leaderboard_dict.items():
+      bidder["won_items"] = ", ".join([item for item in bidder["won_items"]])
       bidder["total_spend"] = '{:0,.2f}'.format(bidder["total_spend"])
+    
     ctxt["leaderboard_dict"] = leaderboard_dict
     ctxt["highest_promise_count"] = highest_promise_count
     ctxt["total_raised"] = '{:0,.2f}'.format(total_raised)

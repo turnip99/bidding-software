@@ -9,6 +9,8 @@ class AuctionSetting(models.Model):
     is_promise_auction = models.BooleanField(default=True, verbose_name="Is this a promise auction (as opposed to a conventional auction)?")
     primary_colour = models.CharField(max_length=7, default="#000080", help_text="Hex code. Used for some text on the website.")
     max_bid = models.DecimalField(decimal_places=2, max_digits=12, default=999.99, help_text="The highest bid someone can make on this auction.")
+    enable_leaderboard = models.BooleanField(default=True)
+    leaderboard_spaces = models.IntegerField(default=10, blank=True, null=True, help_text="The top X bidders to appear on the leaderboard. Leave blank to display all bidders on the leaderboard.")
     payment_account_holder_name = models.CharField(max_length=100, blank=True, null=True, help_text="Used in the message generator.")
     payment_account_number = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
     payment_sort_code = models.CharField(max_length=8, blank=True, null=True, help_text="Used in the message generator.")
