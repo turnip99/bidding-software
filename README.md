@@ -28,4 +28,4 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 
 # How to use the software
 - Navigate to the /admin URL (e.g. `http://0.0.0.0:8000/admin` on local) and log in with your superuser account to add items to bid on. You can import `bidding_software/item_import_template.csv` to add some demo data for testing.
-- Navigate to the base URL (e.g. `http://0.0.0.0:8000/` on local) to log in as a user and bid on promises.
+- Navigate to the base URL (e.g. `http://0.0.0.0:8000/` on local) to bid on promises.
