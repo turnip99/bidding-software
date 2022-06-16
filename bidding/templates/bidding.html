@@ -238,7 +238,7 @@
 
   <script>
     $("#nav_bidding").addClass("active")
-    updateBids();
+    setTimeout(updateBids, 10000);
     
     function updateBids(){
       $.ajax({
