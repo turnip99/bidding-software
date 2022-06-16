@@ -72,7 +72,7 @@ class Item(models.Model):
     @property
     def live(self):
         now = timezone.now()
-        return self.dt_live <= now and self.dt_closed > timezone.now()
+        return self.dt_live <= now and self.dt_closed > now
 
     @property
     def closed(self):
