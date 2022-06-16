@@ -4,8 +4,8 @@ from django.utils import timezone
 from bidding.models import Item, Bid
 
 now = timezone.now()
-minus_one_hundred_years = now - timedelta(days=200)
-minus_two_hundred_days = now - timedelta(days=100)
+minus_one_hundred_years = now - timedelta(days=100)
+minus_two_hundred_days = now - timedelta(days=200)
 one_hundred_days = now + timedelta(days=100)
 for i in range(1, 70):
     winners_num = randint(1, 5)
