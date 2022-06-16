@@ -83,6 +83,7 @@ def update_bids(request):
     if item.status == "live":
       item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
       item_updates[item.id]["remaining"] = item.time_until_close()
+  print(f"Time to process bid update: {timezone.now() - now}")
   return JsonResponse({'item_updates': item_updates})
 
 

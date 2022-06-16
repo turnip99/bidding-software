@@ -9,16 +9,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" id="nav_bidding">
-                    <a onclick="navigateToURL(`{% url 'bidding' %}`)" href="#" role="button" class="nav-link">Start Bidding</a>
+                    <a onclick="navigateToURL(`{% url 'bidding' %}`)" href="#" role="button" class="nav-link" oncontextmenu="return false">Start Bidding</a>
                 </li>
                 {% if auction_setting.enable_leaderboard %}
                     <li class="nav-item" id="nav_leaderboard">
-                        <a onclick="navigateToURL(`{% url 'leaderboard' %}`)" href="#" role="button" class="nav-link">View Leaderboard</a>
+                        <a onclick="navigateToURL(`{% url 'leaderboard' %}`)" href="#" role="button" class="nav-link" oncontextmenu="return false">View Leaderboard</a>
                     </li>
                 {% endif %}
                 {% if request.user.is_superuser %}
                     <li class="nav-item" id="nav_admin_panel">
-                        <a onclick="navigateToURL(`{% url 'admin_panel' %}`)" href="#" role="button" class="nav-link">Admin Panel</a>
+                        <a onclick="navigateToURL(`{% url 'admin_panel' %}`)" href="#" role="button" class="nav-link" oncontextmenu="return false">Admin Panel</a>
                     </li>
                 {% endif %}
             </ul>
