@@ -1,11 +1,13 @@
 import collections
 import itertools
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import generic
 
 from .models import AuctionSetting, Item, Bid
@@ -71,14 +73,16 @@ class BiddingView(AuctionSettingMixin, generic.TemplateView):
 
 # Called by ajax.
 def update_bids(request):
-  items = Item.objects.all()
+  now = timezone.now()
+  thirty_seconds_ago = now - timedelta(seconds=30)
+  # If the item has not opened yet or closed more than 30 seconds ago, we don't need to send item updates anymore.
+  items = Item.objects.filter(dt_live__lte=now).exclude(dt_closed__lte=thirty_seconds_ago)
   item_updates = {}
   for item in items:
-    if item.status != "upcoming":
-      item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name, "additional_winners": item.additional_winners()}
-      if item.status == "live":
-        item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
-        item_updates[item.id]["remaining"] = item.time_until_close()
+    item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name, "additional_winners": item.additional_winners()}
+    if item.status == "live":
+      item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
+      item_updates[item.id]["remaining"] = item.time_until_close()
   return JsonResponse({'item_updates': item_updates})
 
 
