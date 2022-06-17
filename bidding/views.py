@@ -81,7 +81,7 @@ def update_bids(request):
     if item.status == "live":
       item_updates[item.id]["dt_closed"] = item.dt_closed.strftime("%d-%m-%Y %H:%M")
       item_updates[item.id]["remaining"] = item.time_until_close()
-  print(f"Time to process bid sync: {timezone.now() - now}")
+  print(f"Time to process bid sync: {(timezone.now() - now).total_seconds()}s")
   return JsonResponse({'item_updates': item_updates})
 
 
@@ -121,7 +121,7 @@ def add_bid(request, item_id, price, name, phone_number):
       item.winning_name = name
       item.winning_phone_number = phone_number
       item.save()
-  print(f"Time to add bid: {timezone.now() - now}")
+  print(f"Time to process bid add: {(timezone.now() - now).total_seconds()}s")
   return JsonResponse({'error': error})
 
 
