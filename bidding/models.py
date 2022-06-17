@@ -9,6 +9,7 @@ class AuctionSetting(models.Model):
     is_promise_auction = models.BooleanField(default=True, verbose_name="Is this a promise auction (as opposed to a conventional auction)?")
     primary_colour = models.CharField(max_length=7, default="#000080", help_text="Hex code. Used for some text on the website.")
     max_bid = models.DecimalField(decimal_places=2, max_digits=12, default=999.99, help_text="The highest bid someone can make on this auction.")
+    bid_sync_regularity = models.IntegerField(default=10, help_text="How often the winning bids on the bidding page are synced with the server (in seconds).")
     enable_leaderboard = models.BooleanField(default=True)
     leaderboard_spaces = models.IntegerField(default=10, blank=True, null=True, help_text="The top X bidders to appear on the leaderboard. Leave blank to display all bidders on the leaderboard.")
     payment_account_holder_name = models.CharField(max_length=100, blank=True, null=True, help_text="Used in the message generator.")
@@ -50,6 +51,7 @@ class Item(models.Model):
     winning_phone_number = models.CharField(max_length=20, blank=True, null=True)
     winning_price = models.FloatField(max_length=0, blank=True, null=True)
     winners_num = models.IntegerField(default=1)
+    dt_last_updated = models.DateTimeField('date/time last updated')
 
     class Meta:
         ordering = ("id",)
@@ -59,6 +61,10 @@ class Item(models.Model):
         if self.winning_price:
             string += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
         return string
+
+    def save(self, *args, **kwargs):
+        self.dt_last_updated=timezone.now()
+        super(Item, self).save(*args, **kwargs)
 
     @property
     def status(self):
