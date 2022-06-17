@@ -51,7 +51,6 @@ class Item(models.Model):
     winning_phone_number = models.CharField(max_length=20, blank=True, null=True)
     winning_price = models.FloatField(max_length=0, blank=True, null=True)
     winners_num = models.IntegerField(default=1)
-    dt_last_updated = models.DateTimeField('date/time last updated')
 
     class Meta:
         ordering = ("id",)
@@ -61,10 +60,6 @@ class Item(models.Model):
         if self.winning_price:
             string += " (" + self.winning_name + " - " + str(self.winning_price) + ")"
         return string
-
-    def save(self, *args, **kwargs):
-        self.dt_last_updated=timezone.now()
-        super(Item, self).save(*args, **kwargs)
 
     @property
     def status(self):
@@ -95,14 +90,11 @@ class Item(models.Model):
     def formatted_base_price(self):
         return '{:0,.2f}'.format(self.base_price)
 
-    def bids(self):
-        return Bid.objects.filter(item=self).order_by("-price")
-
     def additional_winners(self):
         additional_winners = []
         winning_names_numbers = []
         if self.winning_price and self.winners_num > 1:
-            for bid in self.bids():
+            for bid in self.bid_set.all():
                 if not in_winning_names_numbers(winning_names_numbers, bid) and (bid.name != bid.item.winning_name or bid.phone_number != bid.item.winning_phone_number):
                     additional_winners.append({"position": number_to_position(len(additional_winners)+2), "name": bid.name, "phone_number": bid.phone_number, "price": bid.formatted_price, "price_raw": bid.price})
                     winning_names_numbers.append({"name": bid.name, "phone_number": bid.phone_number})
@@ -157,6 +149,9 @@ class Bid(models.Model):
     name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=20)
     price = models.FloatField(max_length=0)
+
+    class Meta:
+        ordering = ("-price",)
 
     def __str__(self):
         return str(self.item.name) + " - " + self.name + " - £" + str(self.price)

@@ -1,8 +1,6 @@
 import collections
-import itertools
 from datetime import timedelta
 
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -53,7 +51,7 @@ class BiddingView(AuctionSettingMixin, generic.TemplateView):
 
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
-    items = Item.objects.all().order_by("-dt_closed", "id")
+    items = Item.objects.all().order_by("-dt_closed", "id").prefetch_related("bid_set")
     items_upcoming = []
     items_live = []
     items_closed = []
@@ -76,7 +74,7 @@ def update_bids(request):
   now = timezone.now()
   thirty_seconds_ago = now - timedelta(seconds=30)
   # If the item has not opened yet or closed more than 30 seconds ago, we don't need to send item updates anymore.
-  items = Item.objects.filter(dt_live__lte=now).exclude(dt_closed__lte=thirty_seconds_ago)
+  items = Item.objects.filter(dt_live__lte=now).exclude(dt_closed__lte=thirty_seconds_ago).prefetch_related("bid_set")
   item_updates = {}
   for item in items:
     item_updates[item.id] = {"status": item.status, "winning_price": item.formatted_winning_price, "winning_name": item.winning_name, "additional_winners": item.additional_winners()}
@@ -138,7 +136,7 @@ class LeaderboardView(AuctionSettingMixin, generic.TemplateView):
 
   def get_context_data(self, **kwargs):
     ctxt = super().get_context_data(**kwargs)
-    items = Item.objects.all().order_by("-dt_closed")
+    items = Item.objects.all().order_by("-dt_closed").prefetch_related("bid_set")
     item_winners = []
     total_raised = 0
     for item in items:
