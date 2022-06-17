@@ -238,7 +238,7 @@
 
   <script>
     $("#nav_bidding").addClass("active")
-    setTimeout(updateBids, 10000);
+    setTimeout(updateBids, {{ auction_setting.bid_sync_regularity }} * 1000);
     
     function updateBids(){
       $.ajax({
@@ -305,7 +305,7 @@
           }
         }
       });
-      setTimeout(updateBids, 10000);
+      setTimeout(updateBids, {{ auction_setting.bid_sync_regularity }} * 1000);
     }
 
     $(document).on("keyup", ".bid-price", function(e){
