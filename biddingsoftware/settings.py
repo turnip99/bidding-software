@@ -143,3 +143,21 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+DATETIME_INPUT_FORMATS = [
+    "%d-%m-%Y %H:%M:%S",
+    "%d-%m-%Y %H:%M",
+    "%d-%m-%y %H:%M:%S",
+    "%d-%m-%y %H:%M",
+    "%d/%m/%Y %H:%M:%S",
+    "%d/%m/%Y %H:%M",
+    "%d/%m/%y %H:%M:%S",
+    "%d/%m/%y %H:%M",
+]
+
+DATE_INPUT_FORMATS = [
+    "%d-%m-%Y",
+    "%d-%m-%y",
+    "%d/%m/%Y",
+    "%d/%m/%y",
+]
