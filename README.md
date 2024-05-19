@@ -27,7 +27,6 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,0.0.0.0,localhost"
 - Run `python manage.py runserver 0.0.0.0:8000` in the venv.
 - Open `localhost:8000` in a browser.
 - Hit `CTRL+C` to exit the server.
-- Run `pip freeze > requirements.txt` to ensure that the requirements file is up to date.
 - Type `deactivate` to leave venv.
 
 # Set-up on live
