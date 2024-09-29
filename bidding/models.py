@@ -1,4 +1,4 @@
-from tokenize import String
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -9,7 +9,8 @@ class AuctionSetting(models.Model):
     is_promise_auction = models.BooleanField(default=True, verbose_name="Is this a promise auction (as opposed to a conventional auction)?")
     primary_colour = models.CharField(max_length=7, default="#000080", help_text="Hex code. Used for some text on the website.")
     max_bid = models.DecimalField(decimal_places=2, max_digits=12, default=999.99, help_text="The highest bid someone can make on this auction.")
-    bid_sync_regularity = models.IntegerField(default=10, help_text="How often the winning bids on the bidding page are synced with the server (in seconds).")
+    bid_sync_regularity = models.IntegerField(default=10, validators=[MinValueValidator(5)], help_text="How often the winning bids on the bidding page are synced with the server (in seconds, minimum 5). Increase this to improve performance.")
+    prevent_decimals = models.BooleanField(default=False, help_text="If ticked, bids must be whole numbers.")
     enable_leaderboard = models.BooleanField(default=True)
     leaderboard_spaces = models.IntegerField(default=10, blank=True, null=True, help_text="The top X bidders to appear on the leaderboard. Leave blank to display all bidders on the leaderboard.")
     payment_account_holder_name = models.CharField(max_length=100, blank=True, null=True, help_text="Used in the message generator.")

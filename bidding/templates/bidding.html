@@ -89,7 +89,7 @@
                 </span>
               {% endfor %}
             {% else %}
-              There are no upcoming auctions.
+              <span id="no_upcoming">There are no upcoming auctions.</span>
             {% endif %}
           </div>
         </div>
@@ -131,7 +131,7 @@
                       {% endwith %}
                     </div>
                     <div id="your_bid_{{ item.id }}" class="col-md-6 col-12">
-                      Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}" min="0" max="1000"> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
+                      Your bid: £<input type="number" class="bid-price" name="bid_{{ item.id }}" id="bid_{{ item.id }}" min="0" max="1000"{% if auction_setting.prevent_decimals %} step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57"{% endif %}> <button class="btn btn-success btn-bid" type="button" data-promise-id="{{ item.id }}">Bid</button>
                     </div>
                     <div class="col-12 pt-1">
                       <span id="time_{{ item.id }}">
@@ -146,7 +146,7 @@
                 </span>
               {% endfor %}
             {% else %}
-              There are no live auctions.
+              <span id="no_live">There are no live auctions.</span>
             {% endif %}
           </div>
         </div>
@@ -204,7 +204,7 @@
                 </span>
               {% endfor %}
             {% else %}
-              There are no closed auctions.
+              <span id="no_closed">There are no closed auctions.</span>
             {% endif %}
           </div>
         </div>
@@ -215,9 +215,7 @@
     <div class="modal fade" id="error_modal" tabindex="-1" role="dialog" aria-labelledby="error_modal_label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-body" id="error_modal_text">
-
-          </div>
+          <div class="modal-body" id="error_modal_text"></div>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Ok</button>
         </div>
       </div>
@@ -227,9 +225,7 @@
   <div class="modal fade" id="success_modal" tabindex="-1" role="dialog" aria-labelledby="success_modal_label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-body" id="success_modal_text">
-
-          </div>
+          <div class="modal-body" id="success_modal_text"></div>
           <button type="button" class="btn btn-success" data-dismiss="modal">Yay!</button>
         </div>
       </div>
@@ -251,6 +247,7 @@
               let price = item_updates["winning_price"]
               let name = item_updates["winning_name"]
               if (price && name) {
+                // If there is at least one bid, display the winner(s).
                 $("#starting_price_" + id).addClass("d-none")
                 let winning_bid_div = $("#winning_bid_" + id)
                 winning_bid_div.find(".winning_price").html("£" + price)
@@ -267,7 +264,9 @@
               }
               let item_span = $("#promise_" + id)
               let old_status = item_span.attr("data-status")
+              // If status has changed from upcoming to live.
               if (old_status == "upcoming") {
+                $("#no_live").remove()
                 item_span.attr("data-status", "live")
                 item_span.find(".upcoming").removeClass('upcoming').addClass('live')
                 $("#your_bid_" + id).removeClass("d-none")
@@ -287,7 +286,9 @@
             else if (status == "closed") {
               let item_span = $("#promise_" + id)
               let old_status = item_span.attr("data-status")
+              // If status has changed from upcoming to live.
               if (old_status == "live") {
+                $("#no_closed").remove()
                 $("#starting_price_" + id).addClass("d-none")
                 $("#winning_bid_" + id).removeClass("d-none")
                 item_span.attr("data-status", "closed")
@@ -315,6 +316,9 @@
       }
     });
 
+    max_bid = {{ auction_setting.max_bid }}
+    prevent_decimals = "{{ auction_setting.prevent_decimals }}" == "True"
+
     $(document).on("click", ".btn-bid", function() {
         let promise_id = $(this).attr("data-promise-id")
         let price = $(this).parent().find(".bid-price").val()
@@ -327,9 +331,12 @@
           add_error("You must enter a phone number to bid (at the top of the page).")
         }
         else if (!price) {
-          add_error("You must - a price to bid on this item.")
+          add_error("You must enter a price to bid on this item.")
         }
-        else if (price > {{ auction_setting.max_bid }}) {
+        else if (prevent_decimals && !Number.isInteger(Number(price))) {
+          add_error("Please enter a whole number - no pennies allowed in this auction!")
+        }
+        else if (price > max_bid) {
           add_error("Please enter a reasonable price - we're not convinced you're that rich!")
         }
         else {
